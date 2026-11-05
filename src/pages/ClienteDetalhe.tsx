@@ -335,8 +335,8 @@ export default function ClienteDetalhe() {
                 </defs>
                 <CartesianGrid stroke="#E2E8F0" strokeDasharray="4 4" vertical={false} />
                 <XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={tipStyle} cursor={{ stroke: '#2563EB', strokeOpacity: 0.15 }} />
+                <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v: any) => Number(v).toLocaleString('pt-BR')} />
+                <Tooltip contentStyle={tipStyle} cursor={{ stroke: '#2563EB', strokeOpacity: 0.15 }} formatter={(v: any) => [v == null ? '—' : num(Number(v)), 'Leads']} labelFormatter={(l: any) => String(l)} />
                 <Area type="monotone" dataKey="Leads" stroke="#2563EB" strokeWidth={3} fill="url(#gradArea)" dot={{ r: 5, fill: '#2563EB', stroke: '#fff', strokeWidth: 2 }} activeDot={{ r: 7, fill: '#2563EB', stroke: '#fff', strokeWidth: 2 }} />
               </AreaChart>
             </ResponsiveContainer>
@@ -355,8 +355,8 @@ export default function ClienteDetalhe() {
                 </defs>
                 <CartesianGrid stroke="#E2E8F0" strokeDasharray="4 4" vertical={false} />
                 <XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
-                <Tooltip contentStyle={tipStyle} cursor={{ stroke: '#F59E0B', strokeOpacity: 0.15 }} />
+                <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} tickFormatter={(v: any) => Number(v).toFixed(0)} />
+                <Tooltip contentStyle={tipStyle} cursor={{ stroke: '#F59E0B', strokeOpacity: 0.15 }} formatter={(v: any) => [v == null ? '—' : brl(Number(v)), 'CPL']} labelFormatter={(l: any) => String(l)} />
                 <Line type="monotone" dataKey="CPL" stroke="#F59E0B" strokeWidth={3} dot={{ r: 5, fill: '#F59E0B', stroke: '#fff', strokeWidth: 2 }} activeDot={{ r: 7, fill: '#F59E0B', stroke: '#fff', strokeWidth: 2 }} />
               </LineChart>
             </ResponsiveContainer>
