@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
 import { getEdgeUrl } from '@/lib/supabase';
+import { useAuth } from '@/lib/auth';
 import { Card, Empty, ErrorBox, Loading, Badge, Btn, Primary, Input } from '@/components/UI';
 import { brl, num, dateBR, dateTimeBR, pct, periodLabel } from '@/lib/format';
 import { periodRange, type PeriodKey } from '@/types/database';
@@ -71,6 +72,8 @@ export default function ClienteDetalhe() {
   const [err, setErr] = useState<string | null>(null);
   const [syncMsg, setSyncMsg] = useState<string | null>(null);
   const [syncAt, setSyncAt] = useState<string | null>(null);
+  const { role } = useAuth();
+  const isGestor = role === 'gestor';
   const range = periodRange(period, custom.from && custom.to ? custom : undefined);
   const prev = prevRange(range.from, range.to);
 
@@ -201,7 +204,7 @@ export default function ClienteDetalhe() {
             ) : (
               <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 text-2xl font-extrabold text-white shadow-lg shadow-blue-500/40">{(client.nome_negocio ?? 'C').slice(0, 1).toUpperCase()}</div>
             )}
-            <label className="mt-1 cursor-pointer text-xs font-semibold text-blue-600 hover:underline">Trocar imagem<input type="file" accept="image/*" className="hidden" onChange={handleLogo} /></label>
+            {isGestor && <label className="mt-1 cursor-pointer text-xs font-semibold text-blue-600 hover:underline">Trocar imagem<input type="file" accept="image/*" className="hidden" onChange={handleLogo} /></label>}
           </div>
           <div className="min-w-0 flex-1 text-center">
             <div className="flex flex-wrap items-center justify-center gap-2">
@@ -213,7 +216,7 @@ export default function ClienteDetalhe() {
           <div className="flex flex-wrap items-center gap-2">
             <select value={period} onChange={e => setPeriod(e.target.value as PeriodKey)} className="rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm font-semibold shadow-sm"><option value="hoje">Hoje</option><option value="ontem">Ontem</option><option value="7d">Últimos 7 dias</option><option value="15d">Últimos 15 dias</option><option value="30d">Últimos 30 dias</option><option value="mes">Este mês</option><option value="custom">Personalizado</option></select>
             {period === 'custom' && <><Input type="date" value={custom.from} onChange={(e: any) => setCustom({ ...custom, from: e.target.value })} /><Input type="date" value={custom.to} onChange={(e: any) => setCustom({ ...custom, to: e.target.value })} /></>}
-            <Btn onClick={syncMeta}>{client.ad_account_id ? 'Sincronizar Meta Ads' : 'Integração pendente'}</Btn>
+            {isGestor && <Btn onClick={syncMeta}>{client.ad_account_id ? 'Sincronizar Meta Ads' : 'Integração pendente'}</Btn>}
           </div>
         </div>
       </div>
