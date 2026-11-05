@@ -203,13 +203,29 @@ export default function ClienteDetalhe() {
 
       <Card3D>
         <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-sm font-bold text-slate-900">Comparação com período anterior ({periodLabel(prev.from, prev.to)})</p>
-          <label className="flex items-center gap-2 text-xs font-medium text-slate-600"><input type="checkbox" checked={compare} onChange={e => setCompare(e.target.checked)} /> Mostrar comparação</label>
+          <p className="text-base font-extrabold tracking-tight text-slate-900">Comparação com período anterior</p>
+          <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">{periodLabel(prev.from, prev.to)}</span>
+          <label className="flex items-center gap-2 text-xs font-semibold text-slate-600"><input type="checkbox" checked={compare} onChange={e => setCompare(e.target.checked)} className="h-4 w-4 rounded accent-blue-600" /> Mostrar comparação</label>
         </div>
-        <div className="mt-3 grid gap-3 sm:grid-cols-3">
-          <div className="rounded-xl border border-border bg-gradient-to-br from-white to-slate-50 p-3 text-sm shadow-sm"><p className="text-muted">Investimento</p><p className="font-bold">{brl(cur.invest)} <span className="text-xs font-medium text-slate-500">vs {brl(prv.invest)} ({diffLabel(cur.invest, prv.invest, true)}) {pct(variation(cur.invest, prv.invest))}</span></p></div>
-          <div className="rounded-xl border border-border bg-gradient-to-br from-white to-slate-50 p-3 text-sm shadow-sm"><p className="text-muted">Leads</p><p className="font-bold">{num(cur.leads)} <span className="text-xs font-medium text-slate-500">vs {num(prv.leads)} ({diffLabel(cur.leads, prv.leads)}) {pct(variation(cur.leads, prv.leads))}</span></p></div>
-          <div className="rounded-xl border border-border bg-gradient-to-br from-white to-slate-50 p-3 text-sm shadow-sm"><p className="text-muted">CPL</p><p className="font-bold">{brl(cur.cpl)} <span className="text-xs font-medium text-slate-500">vs {brl(prv.cpl)} ({diffLabel(cur.cpl, prv.cpl, true)}) {pct(variation(cur.cpl, prv.cpl))}</span></p></div>
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-blue-100/50 p-4 shadow-sm">
+            <p className="text-sm font-semibold tracking-wide text-slate-600 uppercase">Investimento</p>
+            <p className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900">{brl(cur.invest)}</p>
+            <p className="mt-1 text-sm text-slate-600">vs <b>{brl(prv.invest)}</b></p>
+            <p className="text-xs font-semibold text-blue-700">{diffLabel(cur.invest, prv.invest, true)} {pct(variation(cur.invest, prv.invest))}</p>
+          </div>
+          <div className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-violet-100/50 p-4 shadow-sm">
+            <p className="text-sm font-semibold tracking-wide text-slate-600 uppercase">Leads</p>
+            <p className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900">{num(cur.leads)}</p>
+            <p className="mt-1 text-sm text-slate-600">vs <b>{num(prv.leads)}</b></p>
+            <p className="text-xs font-semibold text-violet-700">{diffLabel(cur.leads, prv.leads)} {pct(variation(cur.leads, prv.leads))}</p>
+          </div>
+          <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-amber-100/50 p-4 shadow-sm">
+            <p className="text-sm font-semibold tracking-wide text-slate-600 uppercase">CPL</p>
+            <p className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900">{brl(cur.cpl)}</p>
+            <p className="mt-1 text-sm text-slate-600">vs <b>{brl(prv.cpl)}</b></p>
+            <p className="text-xs font-semibold text-amber-700">{diffLabel(cur.cpl, prv.cpl, true)} {pct(variation(cur.cpl, prv.cpl))}</p>
+          </div>
         </div>
       </Card3D>
 
