@@ -270,19 +270,20 @@ export default function ClienteDetalhe() {
             { label: 'Entradas no grupo', value: null as any, grad: 'from-violet-500 to-purple-500', note: 'Não disponível — requer registro/integração' },
           ];
           return (
-            <div className="mt-4 space-y-2">
-              {steps.map(s => {
-                const w = s.value == null ? 0 : Math.max(4, (s.value / max) * 100);
+            <div className="mt-4 space-y-2.5">
+              {steps.map((s, i) => {
+                const w = s.value == null ? 100 : Math.max(12, (s.value / max) * 100);
+                const isPending = s.value == null;
                 return (
-                  <div key={s.label} className="flex items-center gap-3">
-                    <div className="w-28 shrink-0 text-xs font-medium text-slate-600">{s.label}</div>
-                    <div className="h-9 flex-1 overflow-hidden rounded-xl bg-slate-100">
-                      <div className={s.value == null ? 'h-full w-full border border-dashed border-slate-300 bg-slate-50' : `h-full rounded-xl bg-gradient-to-r shadow-md ${s.grad}`} style={{ width: s.value == null ? '100%' : w + '%' }} />
+                  <div key={s.label} className="flex flex-col items-center">
+                    <div
+                      className={isPending ? 'flex h-11 items-center justify-center border border-dashed border-slate-300 bg-slate-50 text-slate-500 shadow-sm' : `flex h-11 items-center justify-center bg-gradient-to-r text-white shadow-md ${s.grad}`}
+                      style={{ width: w + '%', clipPath: i === 0 ? 'polygon(0 0, 100% 0, 97% 100%, 3% 100%)' : 'polygon(3% 0, 97% 0, 100% 100%, 0 100%)' }}
+                    >
+                      <span className="px-4 text-xs font-semibold sm:text-sm">{s.label}: {isPending ? '—' : num(s.value)}</span>
                     </div>
-                    <div className="w-44 shrink-0 text-right">
-                      <p className="text-sm font-bold">{s.value == null ? '—' : num(s.value)}</p>
-                      <p className="text-xs text-muted">{s.note}</p>
-                    </div>
+                    <p className="mt-1 text-xs text-muted">{s.note}</p>
+                    {i < steps.length - 1 && <div className="mt-1 text-slate-300">▼</div>}
                   </div>
                 );
               })}
