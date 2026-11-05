@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, KeyRound, Cable, FileText, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, KeyRound, Cable, FileText, LogOut, TrendingUp } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 
@@ -18,28 +18,36 @@ export default function Layout() {
   const active = (to: string) => loc.pathname === to || (to !== '/gestor' && loc.pathname.startsWith(to));
 
   return (
-    <div className="min-h-screen">
-      <aside className="fixed inset-y-0 left-0 hidden w-60 border-r border-border bg-surface p-4 md:block">
-        <div className="mb-6"><p className="text-base font-bold tracking-tight text-blue-700">Gestão de Grupos</p><p className="text-xs text-muted">Tráfego para achadinhos</p></div>
-        <nav className="space-y-1">
-          {links.map(l => (
-            <Link key={l.to} to={l.to} className={cn('flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium', active(l.to) ? 'bg-blue-50 text-blue-700' : 'text-slate-600 hover:bg-slate-50')}>
-              <l.icon size={16} />{l.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="absolute bottom-4 left-4 right-4 rounded-lg border border-border bg-slate-50 p-3">
-          <p className="truncate text-xs text-muted">{user?.email}</p>
-          <p className={cn('text-xs font-semibold', role === 'gestor' ? 'text-blue-600' : 'text-blue-500')}>{role === 'gestor' ? 'Gestor' : role === 'cliente' ? 'Cliente' : 'Sem função'}</p>
-          <button onClick={signOut} className="mt-2 flex items-center gap-1 text-xs text-slate-500 hover:text-slate-900"><LogOut size={13} /> Sair</button>
+    <div className="min-h-screen bg-background">
+      <aside className="fixed inset-y-0 left-0 hidden w-[260px] border-r border-border bg-white md:block">
+        <div className="flex h-full flex-col p-4">
+          <div className="mb-6 flex items-center gap-3 px-2 pt-2">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white shadow-sm"><TrendingUp size={20} /></div>
+            <div><p className="text-[15px] font-bold tracking-tight text-slate-900">Gestão de Grupos</p><p className="text-xs text-muted">Achadinhos • WhatsApp • Telegram</p></div>
+          </div>
+          <nav className="flex-1 space-y-1">
+            <p className="px-3 pb-1 text-[10px] font-bold tracking-[0.12em] text-slate-400 uppercase">{role === 'cliente' ? 'Painel' : 'Gestão'}</p>
+            {links.map(l => (
+              <Link key={l.to} to={l.to} className={cn('flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition', active(l.to) ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900')}>
+                <l.icon size={18} />{l.label}
+              </Link>
+            ))}
+          </nav>
+          <div className="rounded-2xl border border-border bg-slate-50 p-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-700">{user?.email?.[0]?.toUpperCase()}</div>
+              <div className="min-w-0 flex-1"><p className="truncate text-xs font-medium text-slate-900">{user?.email}</p><p className="text-xs font-semibold text-blue-600">{role === 'gestor' ? 'Gestor' : role === 'cliente' ? 'Cliente' : 'Sem função'}</p></div>
+            </div>
+            <button onClick={signOut} className="mt-3 flex w-full items-center justify-center gap-1 rounded-xl border border-border bg-white py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"><LogOut size={13} /> Sair</button>
+          </div>
         </div>
       </aside>
-      <div className="md:pl-60">
-        <header className="sticky top-0 z-10 border-b border-border bg-background/90 px-4 py-3 backdrop-blur md:hidden">
-          <div className="flex items-center justify-between"><p className="text-sm font-bold text-blue-700">Gestão de Grupos</p><button onClick={signOut} className="text-xs text-muted">Sair</button></div>
-          <div className="mt-2 flex gap-2 overflow-auto">{links.map(l => <Link key={l.to} to={l.to} className={cn('whitespace-nowrap rounded-full border border-border bg-white px-3 py-1 text-xs', active(l.to) && 'bg-blue-50 text-blue-700 border-blue-200')}>{l.label}</Link>)}</div>
+      <div className="md:pl-[260px]">
+        <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-white/80 px-4 py-3 backdrop-blur md:px-6">
+          <div><p className="text-sm font-bold text-slate-900 md:text-base">Gestão de Grupos</p><p className="text-xs text-muted hidden md:block">Acompanhe investimento, leads e CPL em tempo real</p></div>
+          <div className="flex items-center gap-2"><span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">{role === 'gestor' ? 'Gestor' : role === 'cliente' ? 'Cliente' : ''}</span><button onClick={signOut} className="text-xs text-muted hover:text-slate-900 md:hidden">Sair</button></div>
         </header>
-        <main className="mx-auto max-w-6xl p-4 md:p-6"><Outlet /></main>
+        <main className="mx-auto max-w-[1100px] p-4 md:p-6"><Outlet /></main>
       </div>
     </div>
   );
