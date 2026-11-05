@@ -5,10 +5,11 @@ import { getEdgeUrl } from '@/lib/supabase';
 import { Card, Empty, ErrorBox, Loading, Badge, Btn, Primary, Input } from '@/components/UI';
 import { brl, num } from '@/lib/format';
 import { periodRange, type PeriodKey } from '@/types/database';
-import { ResponsiveContainer, BarChart, Bar, LineChart, Line, CartesianGrid, Tooltip, XAxis, YAxis, Legend } from 'recharts';
-import { DollarSign, ShoppingBag, Target, CalendarDays } from 'lucide-react';
+import { ResponsiveContainer, BarChart, Bar, LineChart, Line, AreaChart, Area, CartesianGrid, Tooltip, XAxis, YAxis, Legend, PieChart, Pie, Cell } from 'recharts';
+import { DollarSign, ShoppingBag, Target, CalendarDays, TrendingUp } from 'lucide-react';
 
 const tipStyle = { backgroundColor: '#fff', border: '1px solid #E2E8F0', borderRadius: 12, boxShadow: '0 8px 24px rgba(15,23,42,0.08)', fontSize: 12 };
+const COLORS = ['#2563EB', '#10B981'];
 
 export default function ClienteDetalhe() {
   const { id } = useParams();
@@ -45,6 +46,10 @@ export default function ClienteDetalhe() {
   const chartData = metrics.map(r => ({ date: r.date.slice(5), Investimento: Number(r.spend ?? 0), Leads: Number(r.leads ?? 0), CPL: r.leads ? Number(r.spend ?? 0) / Number(r.leads) : 0 }));
 
   const onMeta = cpl != null && client?.meta_cpl != null ? (cpl <= Number(client.meta_cpl) ? <Badge tone="ok">Dentro da meta</Badge> : <Badge tone="bad">Acima da meta</Badge>) : <Badge tone="muted">Sem dados suficientes</Badge>;
+  const donut = [
+    { name: 'Investimento', value: totalInvest },
+    { name: 'Leads', value: totalLeads },
+  ];
 
   async function saveSummary() { if (!id) return; await supabase.from('operation_summaries').insert({ client_id: id, content: summary }); await supabase.from('clients').update({ resumo_operacao: summary, updated_at: new Date().toISOString() }).eq('id', id); alert('Resumo salvo.'); }
   async function syncMeta() {
@@ -74,21 +79,27 @@ export default function ClienteDetalhe() {
       {syncMsg && <div className={syncMsg.includes('pendente') || syncMsg.includes('Erro') ? 'rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800' : 'rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800'}>{syncMsg}</div>}
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="p-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><DollarSign size={18} /></div><div><p className="text-xs text-muted">Investimento total</p><p className="text-lg font-bold text-slate-900">{brl(totalInvest)}</p></div></div></Card>
-        <Card className="p-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600"><ShoppingBag size={18} /></div><div><p className="text-xs text-muted">Leads gerados</p><p className="text-lg font-bold text-slate-900">{num(totalLeads)}</p></div></div></Card>
-        <Card className="p-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600"><Target size={18} /></div><div><p className="text-xs text-muted">CPL</p><p className="text-lg font-bold text-slate-900">{brl(cpl)}</p></div></div><div className="mt-2">{onMeta}</div></Card>
-        <Card className="p-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600"><CalendarDays size={18} /></div><div><p className="text-xs text-muted">Meta de CPL</p><p className="text-lg font-bold text-slate-900">{brl(client.meta_cpl)}</p></div></div></Card>
-        <Card className="p-4"><p className="text-xs text-muted">Orçamento diário</p><p className="text-lg font-bold text-slate-900">{brl(client.orcamento_diario)}</p></Card>
-        <Card className="p-4"><p className="text-xs text-muted">Investimento do dia</p><p className="text-lg font-bold text-slate-900">{brl(todayInvest)}</p></Card>
-        <Card className="p-4"><p className="text-xs text-muted">Leads do dia</p><p className="text-lg font-bold text-slate-900">{num(todayLeads)}</p></Card>
-        <Card className="p-4"><p className="text-xs text-muted">CPL do dia</p><p className="text-lg font-bold text-slate-900">{todayLeads ? brl(todayInvest / todayLeads) : '—'}</p></Card>
+        <Card className="p-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600"><DollarSign size={18} /></div><div><p className="text-xs text-muted">Investimento total</p><p className="text-[22px] font-bold tracking-tight text-slate-900">{brl(totalInvest)}</p></div></div></Card>
+        <Card className="p-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-600"><ShoppingBag size={18} /></div><div><p className="text-xs text-muted">Leads gerados</p><p className="text-[22px] font-bold tracking-tight text-slate-900">{num(totalLeads)}</p></div></div></Card>
+        <Card className="p-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600"><Target size={18} /></div><div><p className="text-xs text-muted">CPL</p><p className="text-[22px] font-bold tracking-tight text-slate-900">{brl(cpl)}</p></div></div><div className="mt-2">{onMeta}</div></Card>
+        <Card className="p-4"><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-sky-50 text-sky-600"><CalendarDays size={18} /></div><div><p className="text-xs text-muted">Meta de CPL</p><p className="text-[22px] font-bold tracking-tight text-slate-900">{brl(client.meta_cpl)}</p></div></div></Card>
+      </div>
+
+      <div className="grid gap-4 lg:grid-cols-3">
+        <Card className="lg:col-span-2">
+          <div className="mb-1 flex items-center justify-between"><p className="text-sm font-bold text-slate-900">Crescimento de leads</p><span className="flex items-center gap-1.5 text-xs text-muted"><span className="h-2 w-2 rounded-full bg-blue-600" />Novos leads</span></div>
+          <div className="h-56"><ResponsiveContainer><AreaChart data={chartData}><CartesianGrid stroke="#E2E8F0" strokeDasharray="3 3" /><XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} /><YAxis tick={{ fill: '#64748B', fontSize: 11 }} /><Tooltip contentStyle={tipStyle} /><Area type="monotone" dataKey="Leads" stroke="#2563EB" strokeWidth={2.5} fill="#2563EB18" /></AreaChart></ResponsiveContainer></div>
+        </Card>
+        <Card>
+          <p className="text-sm font-bold text-slate-900">Composição</p>
+          <div className="flex h-40 items-center justify-center"><ResponsiveContainer><PieChart><Pie data={donut} dataKey="value" innerRadius={48} outerRadius={72} paddingAngle={3} stroke="#fff"><Cell fill={COLORS[0]} /><Cell fill={COLORS[1]} /></Pie></PieChart></ResponsiveContainer></div>
+          <div className="space-y-1 text-xs text-muted"><p className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-blue-600" />Investimento — {brl(totalInvest)}</p><p className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-emerald-500" />Leads — {num(totalLeads)}</p></div>
+        </Card>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
-        <Card><p className="mb-2 text-sm font-bold text-slate-900">Investimento por dia</p><div className="h-56"><ResponsiveContainer><BarChart data={chartData}><CartesianGrid stroke="#E2E8F0" strokeDasharray="3 3" /><XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} /><YAxis tick={{ fill: '#64748B', fontSize: 11 }} /><Tooltip contentStyle={tipStyle} /><Legend /><Bar dataKey="Investimento" fill="#2563EB" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer></div></Card>
-        <Card><p className="mb-2 text-sm font-bold text-slate-900">Leads por dia</p><div className="h-56"><ResponsiveContainer><BarChart data={chartData}><CartesianGrid stroke="#E2E8F0" strokeDasharray="3 3" /><XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} /><YAxis tick={{ fill: '#64748B', fontSize: 11 }} /><Tooltip contentStyle={tipStyle} /><Legend /><Bar dataKey="Leads" fill="#8B5CF6" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer></div></Card>
-        <Card><p className="mb-2 text-sm font-bold text-slate-900">Evolução do CPL</p><div className="h-56"><ResponsiveContainer><LineChart data={chartData}><CartesianGrid stroke="#E2E8F0" strokeDasharray="3 3" /><XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} /><YAxis tick={{ fill: '#64748B', fontSize: 11 }} /><Tooltip contentStyle={tipStyle} /><Legend /><Line dataKey="CPL" stroke="#F59E0B" strokeWidth={2.5} dot={false} /></LineChart></ResponsiveContainer></div></Card>
-        <Card><p className="mb-2 text-sm font-bold text-slate-900">Comparativo: Investimento x Leads</p><div className="h-56"><ResponsiveContainer><LineChart data={chartData}><CartesianGrid stroke="#E2E8F0" strokeDasharray="3 3" /><XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} /><YAxis tick={{ fill: '#64748B', fontSize: 11 }} /><Tooltip contentStyle={tipStyle} /><Legend /><Line dataKey="Investimento" stroke="#2563EB" strokeWidth={2.5} dot={false} /><Line dataKey="Leads" stroke="#10B981" strokeWidth={2.5} dot={false} /></LineChart></ResponsiveContainer></div></Card>
+        <Card><p className="mb-2 text-sm font-bold text-slate-900">Investimento por dia</p><div className="h-52"><ResponsiveContainer><BarChart data={chartData}><CartesianGrid stroke="#E2E8F0" strokeDasharray="3 3" /><XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} /><YAxis tick={{ fill: '#64748B', fontSize: 11 }} /><Tooltip contentStyle={tipStyle} /><Bar dataKey="Investimento" fill="#2563EB" radius={[6, 6, 0, 0]} /></BarChart></ResponsiveContainer></div></Card>
+        <Card><p className="mb-2 text-sm font-bold text-slate-900">Evolução do CPL</p><div className="h-52"><ResponsiveContainer><LineChart data={chartData}><CartesianGrid stroke="#E2E8F0" strokeDasharray="3 3" /><XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} /><YAxis tick={{ fill: '#64748B', fontSize: 11 }} /><Tooltip contentStyle={tipStyle} /><Line type="monotone" dataKey="CPL" stroke="#F59E0B" strokeWidth={2.5} dot={false} /></LineChart></ResponsiveContainer></div></Card>
       </div>
 
       <Card className="p-0 overflow-hidden">

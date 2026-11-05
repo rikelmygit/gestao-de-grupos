@@ -26,7 +26,7 @@ export default function Layout() {
             <div><p className="text-[15px] font-bold tracking-tight text-slate-900">Gestão de Grupos</p><p className="text-xs text-muted">Achadinhos • WhatsApp • Telegram</p></div>
           </div>
           <nav className="flex-1 space-y-1">
-            <p className="px-3 pb-1 text-[10px] font-bold tracking-[0.12em] text-slate-400 uppercase">{role === 'cliente' ? 'Painel' : 'Gestão'}</p>
+            <p className="px-3 pb-1 text-[10px] font-bold tracking-[0.12em] uppercase text-slate-400">{role === 'cliente' ? 'Painel' : 'Gestão'}</p>
             {links.map(l => (
               <Link key={l.to} to={l.to} className={cn('flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition', active(l.to) ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900')}>
                 <l.icon size={18} />{l.label}
@@ -44,8 +44,8 @@ export default function Layout() {
       </aside>
       <div className="md:pl-[260px]">
         <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-white/80 px-4 py-3 backdrop-blur md:px-6">
-          <div><p className="text-sm font-bold text-slate-900 md:text-base">Gestão de Grupos</p><p className="text-xs text-muted hidden md:block">Acompanhe investimento, leads e CPL em tempo real</p></div>
-          <div className="flex items-center gap-2"><span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">{role === 'gestor' ? 'Gestor' : role === 'cliente' ? 'Cliente' : ''}</span><button onClick={signOut} className="text-xs text-muted hover:text-slate-900 md:hidden">Sair</button></div>
+          <div><p className="text-sm font-bold text-slate-900 md:text-base">Gestão de Grupos</p><p className="hidden text-xs text-muted md:block">Acompanhe investimento, leads e CPL em tempo real</p></div>
+          <div className="flex items-center gap-2"><span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">{role === 'gestor' ? 'Gestor' : role === 'cliente' ? 'Cliente' : ''}</span></div>
         </header>
         <main className="mx-auto max-w-[1100px] p-4 md:p-6"><Outlet /></main>
       </div>
