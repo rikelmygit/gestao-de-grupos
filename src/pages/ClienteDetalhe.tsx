@@ -255,33 +255,42 @@ export default function ClienteDetalhe() {
         </Card3D>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card3D>
-          <p className="text-sm font-bold text-slate-900">Do clique à conversão</p>
-          <div className="mt-3 divide-y divide-border">
-            <div className="flex justify-between py-3"><span className="text-sm text-muted">Impressões</span><span className="font-bold">{num(cur.impr)}</span></div>
-            <div className="flex justify-between py-3"><span className="text-sm text-muted">Cliques</span><span className="font-bold">{num(cur.clicks)} • CTR {cur.impr ? (((cur.clicks / cur.impr) * 100).toFixed(1)) + '%' : '—'}</span></div>
-            <div className="flex justify-between py-3"><span className="text-sm text-muted">Visitas à página</span><span className="font-bold">{num(cur.reach ? Math.min(cur.reach, 999999) : null)} • {cur.clicks ? ((cur.reach / cur.clicks) * 100).toFixed(0) + '%' : '—'}</span></div>
-            <div className="flex justify-between py-3"><span className="text-sm text-muted">Leads</span><span className="font-bold">{num(cur.leads)} • conversão {cur.clicks ? (((cur.leads / cur.clicks) * 100).toFixed(1)) + '%' : '—'}</span></div>
-          </div>
-          <p className="text-xs text-muted">Taxas usam somente métricas compatíveis do acumulado. “—” = não disponível.</p>
-        </Card3D>
-
-        <Card3D>
-          <p className="text-sm font-bold text-slate-900">Funil completo</p>
-          <div className="mt-3 grid grid-cols-2 gap-2">
-            {['Impressões','Cliques','Leads Meta','Entradas no grupo'].map((st, i) => (
-              <div key={st} className="relative overflow-hidden rounded-xl border border-border bg-gradient-to-br from-white to-slate-50 p-3 shadow-sm">
-                <div className="absolute left-0 top-0 h-full w-1 bg-gradient-to-b from-blue-500 to-violet-500" />
-                <p className="text-xs text-muted">{st}</p>
-                <p className="font-bold">{i === 0 ? num(cur.impr) : i === 1 ? num(cur.clicks) : i === 2 ? num(cur.leads) : '—'}</p>
-                <p className="text-xs text-slate-500">{i === 3 ? 'Não disponível — requer registro/integração' : ''}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-2 text-xs text-muted">Conversas iniciadas e entradas no grupo não são estimadas sem webhook/registro manual.</p>
-        </Card3D>
-      </div>
+      <Card3D>
+        <p className="text-sm font-bold text-slate-900">Funil: do clique à conversão</p>
+        <p className="text-xs text-muted">Dados reais da Meta. Alcance não é visita à página — por isso não calculamos % a partir dele.</p>
+        {(() => {
+          const ctr = cur.impr ? (cur.clicks / cur.impr) * 100 : null;
+          const leadRate = cur.clicks ? (cur.leads / cur.clicks) * 100 : null;
+          const max = Math.max(cur.impr, cur.reach, cur.clicks, cur.leads, 1);
+          const steps = [
+            { label: 'Impressões', value: cur.impr, grad: 'from-slate-400 to-slate-500', note: 'base' },
+            { label: 'Alcance', value: cur.reach, grad: 'from-sky-500 to-blue-500', note: 'pessoas únicas' },
+            { label: 'Cliques', value: cur.clicks, grad: 'from-blue-500 to-blue-600', note: ctr != null ? `CTR ${ctr.toFixed(1).replace('.', ',')}%` : '—' },
+            { label: 'Leads (Meta)', value: cur.leads, grad: 'from-blue-600 to-violet-600', note: leadRate != null ? `Clique → Lead ${leadRate.toFixed(1).replace('.', ',')}%` : '—' },
+            { label: 'Entradas no grupo', value: null as any, grad: 'from-violet-500 to-purple-500', note: 'Não disponível — requer registro/integração' },
+          ];
+          return (
+            <div className="mt-4 space-y-2">
+              {steps.map(s => {
+                const w = s.value == null ? 0 : Math.max(4, (s.value / max) * 100);
+                return (
+                  <div key={s.label} className="flex items-center gap-3">
+                    <div className="w-28 shrink-0 text-xs font-medium text-slate-600">{s.label}</div>
+                    <div className="h-9 flex-1 overflow-hidden rounded-xl bg-slate-100">
+                      <div className={s.value == null ? 'h-full w-full border border-dashed border-slate-300 bg-slate-50' : `h-full rounded-xl bg-gradient-to-r shadow-md ${s.grad}`} style={{ width: s.value == null ? '100%' : w + '%' }} />
+                    </div>
+                    <div className="w-44 shrink-0 text-right">
+                      <p className="text-sm font-bold">{s.value == null ? '—' : num(s.value)}</p>
+                      <p className="text-xs text-muted">{s.note}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
+        <p className="mt-3 text-xs text-muted">Conversas iniciadas e entradas no grupo não são estimadas sem webhook/registro manual.</p>
+      </Card3D>
 
       <Card3D>
         <p className="text-sm font-bold text-slate-900">Resultado para o cliente</p>
