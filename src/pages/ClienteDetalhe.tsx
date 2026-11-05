@@ -211,7 +211,6 @@ export default function ClienteDetalhe() {
           <div className="rounded-xl border border-border bg-gradient-to-br from-white to-slate-50 p-3 text-sm shadow-sm"><p className="text-muted">Leads</p><p className="font-bold">{num(cur.leads)} <span className="text-xs font-medium text-slate-500">vs {num(prv.leads)} ({diffLabel(cur.leads, prv.leads)}) {pct(variation(cur.leads, prv.leads))}</span></p></div>
           <div className="rounded-xl border border-border bg-gradient-to-br from-white to-slate-50 p-3 text-sm shadow-sm"><p className="text-muted">CPL</p><p className="font-bold">{brl(cur.cpl)} <span className="text-xs font-medium text-slate-500">vs {brl(prv.cpl)} ({diffLabel(cur.cpl, prv.cpl, true)}) {pct(variation(cur.cpl, prv.cpl))}</span></p></div>
         </div>
-        <div className="mt-2 text-xs">CPL atual {brl(cur.cpl)} • Meta {brl(meta)} • {metaDiff == null ? 'sem dados suficientes' : metaDiff <= 0 ? `${brl(Math.abs(metaDiff))} abaixo da meta` : `${brl(metaDiff)} acima da meta`}</div>
       </Card3D>
 
       <div className="grid gap-3 sm:grid-cols-4">
