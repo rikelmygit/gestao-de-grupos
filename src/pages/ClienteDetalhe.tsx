@@ -408,30 +408,6 @@ export default function ClienteDetalhe() {
         )}
       </Card3D>
 
-      <Card3D>
-        <p className="text-sm font-bold text-slate-900 mb-3">Ações da operação</p>
-        {actions === null ? (
-          <div className="rounded-xl border border-dashed border-border p-4 text-sm text-muted">Tabela de ações ainda não criada. Rode a migração <code>002_acoes_funnel.sql</code> no Lovable Cloud → SQL Editor.</div>
-        ) : (
-          <>
-            <div className="grid gap-3 sm:grid-cols-[1fr_auto_auto_auto_auto]">
-              <Input label="Ação" value={actionText} onChange={(e: any) => setActionText(e.target.value)} placeholder="Ex.: testar novo criativo" />
-              <Input label="Responsável" value={resp} onChange={(e: any) => setResp(e.target.value)} placeholder="Nome" />
-              <Input label="Prazo" type="date" value={deadline} onChange={(e: any) => setDeadline(e.target.value)} />
-              <div className="flex items-end"><Primary onClick={saveAction}>Registrar ação</Primary></div>
-            </div>
-            <div className="mt-3 divide-y divide-border">
-              {!actions.length ? <p className="py-3 text-sm text-muted">Nenhuma ação registrada.</p> : actions.map((a: any) => (
-                <div key={a.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
-                  <div><p className="font-medium">{a.action}</p><p className="text-xs text-muted">{a.responsible ? `Responsável: ${a.responsible} • ` : ''}{a.deadline ? `Prazo: ${dateBR(a.deadline)} • ` : ''}Status: {a.status}</p></div>
-                  <select value={a.status} onChange={e => changeStatus(a, e.target.value)} className="rounded-lg border border-border bg-white px-2 py-1.5 text-xs"><option value="pendente">Pendente</option><option value="em_andamento">Em andamento</option><option value="concluida">Concluída</option><option value="pausada">Pausada</option></select>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </Card3D>
-
     </div>
   );
 }
