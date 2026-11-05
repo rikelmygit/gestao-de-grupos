@@ -215,15 +215,15 @@ export default function ClienteDetalhe() {
       </Card3D>
 
       <div className="grid gap-3 sm:grid-cols-4">
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"><DollarSign size={18} /></div><div><p className="text-xs text-muted">Investimento total</p><p className="text-[22px] font-extrabold text-slate-900">{brl(cur.invest)}</p></div></div></Card3D>
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/30"><UserPlus size={18} /></div><div><p className="text-xs text-muted">Leads gerados</p><p className="text-[22px] font-extrabold text-slate-900">{num(cur.leads)}</p></div></div></Card3D>
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30"><Coins size={18} /></div><div><p className="text-xs text-muted">CPL</p><p className="text-[22px] font-extrabold text-slate-900">{brl(cur.cpl)}</p></div></div><div className="mt-2">{onMeta}</div></Card3D>
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500 text-white shadow-lg shadow-sky-500/30"><Target size={18} /></div><div><p className="text-xs text-muted">Meta de CPL</p><p className="text-[22px] font-extrabold text-slate-900">{brl(meta)}</p></div></div></Card3D>
+        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"><DollarSign size={18} /></div><div><p className="text-[22px] font-extrabold text-slate-900">{brl(cur.invest)}</p></div></div></Card3D>
+        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/30"><UserPlus size={18} /></div><div><p className="text-[22px] font-extrabold text-slate-900">{num(cur.leads)}</p></div></div></Card3D>
+        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30"><Coins size={18} /></div><div><p className="text-[22px] font-extrabold text-slate-900">{brl(cur.cpl)}</p></div></div><div className="mt-2">{onMeta}</div></Card3D>
+        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500 text-white shadow-lg shadow-sky-500/30"><Target size={18} /></div><div><p className="text-[22px] font-extrabold text-slate-900">{brl(meta)}</p></div></div></Card3D>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card3D>
-          <div className="mb-1 flex items-center justify-between"><div><p className="text-sm font-bold text-slate-900">Evolução do investimento</p><p className="text-xs text-muted">Gastos por dia, sem projeção. Até 30 barras.</p></div><span className="flex items-center gap-1.5 text-xs text-muted"><span className="h-2 w-2 rounded-full bg-blue-600" />Gasto</span></div>
+          <div className="mb-1 flex items-center justify-between"><div><p className="text-sm font-bold text-slate-900">Evolução do investimento</p></div><span className="flex items-center gap-1.5 text-xs text-muted"><span className="h-2 w-2 rounded-full bg-blue-600" />Gasto</span></div>
           <div className="h-56">
             <ResponsiveContainer>
               <BarChart data={chartData} barCategoryGap="30%">
@@ -245,7 +245,7 @@ export default function ClienteDetalhe() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-xs text-muted">Somente dias com registro. Passe sobre as barras para ver valores.</p>
+          
         </Card3D>
 
         <Card3D>
@@ -263,7 +263,7 @@ export default function ClienteDetalhe() {
 
       <Card3D>
         <p className="text-sm font-bold text-slate-900">Funil: do clique à conversão</p>
-        <p className="text-xs text-muted">Dados reais da Meta. Alcance não é visita à página — por isso não calculamos % a partir dele.</p>
+        
         {(() => {
           const ctr = cur.impr ? (cur.clicks / cur.impr) * 100 : null;
           const leadRate = cur.clicks ? (cur.leads / cur.clicks) * 100 : null;
@@ -286,7 +286,7 @@ export default function ClienteDetalhe() {
                   <div key={s.label} className="flex items-center gap-3">
                     <div className="w-32 shrink-0 text-right">
                       <p className="text-xs font-semibold text-slate-700">{s.label}</p>
-                      <p className="text-xs text-muted">{s.note}</p>
+                      
                     </div>
                     <div className="flex-1">
                       <div className={isPending ? 'flex h-10 items-center rounded-xl border border-dashed border-slate-300 bg-slate-100 px-4' : 'flex h-10 items-center rounded-xl bg-gradient-to-r px-4 shadow-md'} style={{ width: w + '%', background: isPending ? undefined : [
@@ -313,24 +313,24 @@ export default function ClienteDetalhe() {
         <p className="text-sm font-bold text-slate-900">Resultado para o cliente</p>
         {salesRows === null ? <div className="mt-2 rounded-xl border border-dashed border-border p-4 text-sm text-muted">Tabela de vendas ainda não criada. Rode a migração <code>002_acoes_funnel.sql</code>. Sem integração, vendas/receita/ROAS não são exibidos.</div>
         : salesRows.length === 0 ? <div className="mt-2 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm">Vendas e receita ainda não são acompanhadas neste cliente.</div>
-        : <div className="mt-3 grid gap-3 sm:grid-cols-3"><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Vendas</p><p className="font-bold">{num(salesTotal)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Receita</p><p className="font-bold">{brl(revTotal)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">ROAS</p><p className="font-bold">{roas == null ? '—' : roas.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + 'x'}</p></div></div>}
+        : <div className="mt-3 grid gap-3 sm:grid-cols-3"><div className="rounded-xl border border-border p-3"><p className="font-bold">{num(salesTotal)}</p></div><div className="rounded-xl border border-border p-3"><p className="font-bold">{brl(revTotal)}</p></div><div className="rounded-xl border border-border p-3"><p className="font-bold">{roas == null ? '—' : roas.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + 'x'}</p></div></div>}
       </Card3D>
 
       <Card3D>
         <p className="text-sm font-bold text-slate-900">Qualidade e retenção dos leads</p>
         {qualityRows === null ? <div className="mt-2 rounded-xl border border-dashed border-border p-4 text-sm text-muted">Tabela de qualidade ainda não criada. Rode a migração <code>002</code>.</div>
         : qualityRows.length === 0 ? <p className="mt-2 text-sm text-muted">Nenhum dado de qualidade no período. Leads válidos/inválidos/duplicados e retenção precisam ser registrados/integrados.</p>
-        : <div className="mt-3 grid gap-3 sm:grid-cols-4"><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Válidos</p><p className="font-bold">{num(qValid)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Inválidos</p><p className="font-bold">{num(qInvalid)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Duplicados</p><p className="font-bold">{num(qDup)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Retenção 7d</p><p className="font-bold">{num(qRet7)}</p></div></div>}
+        : <div className="mt-3 grid gap-3 sm:grid-cols-4"><div className="rounded-xl border border-border p-3"><p className="font-bold">{num(qValid)}</p></div><div className="rounded-xl border border-border p-3"><p className="font-bold">{num(qInvalid)}</p></div><div className="rounded-xl border border-border p-3"><p className="font-bold">{num(qDup)}</p></div><div className="rounded-xl border border-border p-3"><p className="font-bold">{num(qRet7)}</p></div></div>}
       </Card3D>
 
       <Card3D>
         <p className="text-sm font-bold text-slate-900">Orçamento do período</p>
         {!client?.orcamento_diario ? <p className="mt-2 text-sm text-muted">Sem orçamento diário definido — nenhum valor fictício exibido.</p> : (
           <div className="mt-3 grid gap-3 sm:grid-cols-4">
-            <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Limite do período</p><p className="font-bold">{brl(budgetLimit)}</p><p className="text-xs text-slate-500">{brl(client.orcamento_diario)}/dia × {days}d</p></div>
-            <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Gasto</p><p className="font-bold">{brl(cur.invest)}</p></div>
-            <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Saldo</p><p className="font-bold">{brl(balance)}</p><p className="text-xs text-slate-500">{budgetPct == null ? '—' : budgetPct.toFixed(1) + '% do limite'}</p></div>
-            <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Previsão (ritmo atual)</p><p className="font-bold">{brl(forecast)}</p><p className="text-xs text-slate-500">{brl(avgDay)}/dia em média</p></div>
+            <div className="rounded-xl border border-border p-3"><p className="font-bold">{brl(budgetLimit)}</p><p className="text-xs text-slate-500">{brl(client.orcamento_diario)}/dia × {days}d</p></div>
+            <div className="rounded-xl border border-border p-3"><p className="font-bold">{brl(cur.invest)}</p></div>
+            <div className="rounded-xl border border-border p-3"><p className="font-bold">{brl(balance)}</p><p className="text-xs text-slate-500">{budgetPct == null ? '—' : budgetPct.toFixed(1) + '% do limite'}</p></div>
+            <div className="rounded-xl border border-border p-3"><p className="font-bold">{brl(forecast)}</p><p className="text-xs text-slate-500">{brl(avgDay)}/dia em média</p></div>
           </div>
         )}
       </Card3D>
@@ -369,7 +369,7 @@ export default function ClienteDetalhe() {
       </Card3D>
 
       <Card3D className="p-0 overflow-hidden">
-        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Conjuntos de anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ad_sets</code>. Sem dados = mensagens vazia, sem mock.</p></div>
+        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Conjuntos de anúncios vinculados</p></div>
         {!adSets.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhum conjunto vinculado ainda. Após a sincronização com a Meta, os conjuntos aparecem aqui.</p></div> : (
           <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Campanha</th></tr></thead><tbody>
             {adSets.map(s => <tr key={s.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{s.name}</td><td>{s.status ?? '—'}</td><td>{brl(s.spend)}</td><td>{num(s.leads)}</td><td className="font-medium">{brl(s.cpl)}</td><td className="text-xs text-muted">{s.campaign_external_id ?? '—'}</td></tr>)}
@@ -378,7 +378,7 @@ export default function ClienteDetalhe() {
       </Card3D>
 
       <Card3D className="p-0 overflow-hidden">
-        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ads</code>. Sem dados = mensagens vazia, sem mock.</p></div>
+        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Anúncios vinculados</p></div>
         {!ads.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhum anúncio vinculado ainda.</p></div> : (
           <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Anúncio</th><th>Criativo</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Impressões</th><th>Cliques</th></tr></thead><tbody>
             {ads.map(a => <tr key={a.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{a.name}</td><td>{a.creative_id ?? '—'}</td><td>{brl(a.spend)}</td><td>{num(a.leads)}</td><td className="font-medium">{brl(a.cpl)}</td><td>{num(a.impressions)}</td><td>{num(a.clicks)}</td></tr>)}
@@ -388,7 +388,7 @@ export default function ClienteDetalhe() {
 
       <Card3D className="p-0">
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-          <div><p className="text-sm font-bold text-slate-900">Histórico diário</p><p className="text-xs text-muted">Dados lidos via Meta API, no fuso da conta. Dias ausentes não são preenchidos com zero.</p></div>
+          <div><p className="text-sm font-bold text-slate-900">Histórico diário</p></div>
           <Btn onClick={exportCSV}><Download size={14} /> Exportar diário</Btn>
         </div>
         {!metrics.length ? <div className="px-5 pb-5"><Empty title="Sem dados no período" desc="Sincronize a Meta Ads para popular o histórico." /></div> : (
@@ -410,12 +410,12 @@ export default function ClienteDetalhe() {
 
       <Card3D>
         <p className="text-sm font-bold text-slate-900">Grupos WhatsApp / Telegram — acompanhamento real</p>
-        <p className="text-xs text-muted">Registre 1x/dia o total atual, entradas e saídas observadas. CPR real = gasto / entradas reais. Participantes são contagens observadas, não conversões atribuídas.</p>
+        
         <div className="mt-3 grid gap-3 sm:grid-cols-4">
-          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Entradas no período</p><p className="font-bold">{snaps == null ? '— Tabela pendente' : num(snapEntriesTotal)}</p></div>
-          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Saídas</p><p className="font-bold">{snaps == null ? '—' : num(snapExitsTotal)}</p></div>
-          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Saldo líquido</p><p className="font-bold">{snaps == null ? '—' : num(netEntries)}</p></div>
-          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">CPR real</p><p className="font-bold">{cprReal != null ? brl(cprReal) : snaps == null ? 'Rode migração 003' : 'sem entradas'}</p></div>
+          <div className="rounded-xl border border-border p-3"><p className="font-bold">{snaps == null ? '— Tabela pendente' : num(snapEntriesTotal)}</p></div>
+          <div className="rounded-xl border border-border p-3"><p className="font-bold">{snaps == null ? '—' : num(snapExitsTotal)}</p></div>
+          <div className="rounded-xl border border-border p-3"><p className="font-bold">{snaps == null ? '—' : num(netEntries)}</p></div>
+          <div className="rounded-xl border border-border p-3"><p className="font-bold">{cprReal != null ? brl(cprReal) : snaps == null ? 'Rode migração 003' : 'sem entradas'}</p></div>
         </div>
         {snaps == null ? (
           <div className="mt-3 rounded-xl border border-dashed border-border p-4 text-sm text-muted">Rode a migração <code>003_grupos.sql</code> para ativar o acompanhamento de grupos.</div>
@@ -458,7 +458,7 @@ export default function ClienteDetalhe() {
             <div className="mt-3 divide-y divide-border">
               {!actions.length ? <p className="py-3 text-sm text-muted">Nenhuma ação registrada.</p> : actions.map((a: any) => (
                 <div key={a.id} className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm">
-                  <div><p className="font-medium">{a.action}</p><p className="text-xs text-muted">{a.responsible ? `Responsável: ${a.responsible} • ` : ''}{a.deadline ? `Prazo: ${dateBR(a.deadline)} • ` : ''}Status: {a.status}</p></div>
+                  <div><p className="font-medium">{a.action}</p></div>
                   <select value={a.status} onChange={e => changeStatus(a, e.target.value)} className="rounded-lg border border-border bg-white px-2 py-1.5 text-xs"><option value="pendente">Pendente</option><option value="em_andamento">Em andamento</option><option value="concluida">Concluída</option><option value="pausada">Pausada</option></select>
                 </div>
               ))}
