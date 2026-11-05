@@ -52,8 +52,8 @@ export default function Clientes() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar por nome..." className="rounded-lg border border-border bg-zinc-900 px-3 py-2 text-sm" />
-        <select value={status} onChange={e => setStatus(e.target.value)} className="rounded-lg border border-border bg-zinc-900 px-3 py-2 text-sm"><option value="all">Todos statuses</option><option>ativo</option><option>pausado</option><option>desativado</option><option>pendente</option></select>
+        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar por nome..." className="rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none [color-scheme:light]" />
+        <select value={status} onChange={e => setStatus(e.target.value)} className="rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm outline-none [color-scheme:light]"><option value="all">Todos statuses</option><option>ativo</option><option>pausado</option><option>desativado</option><option>pendente</option></select>
       </div>
 
       {!filtered.length ? <Empty title="Nenhum cliente encontrado" desc="Ajuste a busca ou cadastre um novo cliente." /> : (
@@ -72,7 +72,7 @@ export default function Clientes() {
             <Input label="Telefone" value={form.telefone} onChange={(e: any) => setForm({ ...form, telefone: e.target.value })} />
             <Input label="E-mail *" value={form.email} onChange={(e: any) => setForm({ ...form, email: e.target.value })} />
             <Input label="Nicho" value={form.nicho} onChange={(e: any) => setForm({ ...form, nicho: e.target.value })} />
-            <label className="block"><span className="mb-1 block text-xs text-muted">Status</span><select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as any })} className="w-full rounded-lg border border-border bg-zinc-900 px-3 py-2"><option>ativo</option><option>pausado</option><option>desativado</option><option>pendente</option></select></label>
+            <label className="block"><span className="mb-1.5 block text-xs font-semibold text-slate-600">Status</span><select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as any })} className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none focus:border-blue-500 [color-scheme:light]"><option>ativo</option><option>pausado</option><option>desativado</option><option>pendente</option></select></label>
             <Input label="Orçamento diário (R$)" type="number" step="0.01" value={form.orcamento_diario} onChange={(e: any) => setForm({ ...form, orcamento_diario: e.target.value })} />
             <Input label="Meta de CPL (R$)" type="number" step="0.01" value={form.meta_cpl} onChange={(e: any) => setForm({ ...form, meta_cpl: e.target.value })} />
             <Input label="ID da conta de anúncios" value={form.ad_account_id} onChange={(e: any) => setForm({ ...form, ad_account_id: e.target.value })} />
