@@ -194,7 +194,7 @@ export default function ClienteDetalhe() {
   if (!client) return <Empty title="Cliente não encontrado" desc="Verifique o ID." />;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-4">
       <div className="relative overflow-hidden rounded-[24px] bg-white shadow-[0_24px_60px_-20px_rgba(37,99,235,0.35)] ring-1 ring-slate-200">
         <div className="h-1.5 bg-gradient-to-r from-blue-600 via-sky-500 to-violet-600" />
         <div className="flex flex-wrap items-center gap-5 p-6">
@@ -232,7 +232,7 @@ export default function ClienteDetalhe() {
 
       <Card3D>
           <div className="mb-1 flex items-center justify-between"><div><p className="text-lg font-extrabold tracking-tight text-slate-900">Evolução do investimento</p><p className="text-xs text-muted">Gastos por dia, sem projeção. Até 30 barras.</p></div><span className="flex items-center gap-1.5 text-xs text-muted"><span className="h-2 w-2 rounded-full bg-blue-600" />Gasto</span></div>
-          <div className="h-56">
+          <div className="h-48">
             <ResponsiveContainer>
               <BarChart data={chartData} barCategoryGap="30%">
                 <defs>
@@ -319,7 +319,7 @@ export default function ClienteDetalhe() {
       <div className="grid gap-4 lg:grid-cols-3">
         <Card3D className="lg:col-span-2">
           <div className="mb-2 flex items-center justify-between"><p className="text-lg font-extrabold tracking-tight text-slate-900">Crescimento de leads</p><span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700"><span className="h-2 w-2 rounded-full bg-blue-600" />Novos leads</span></div>
-          <div className="h-64">
+          <div className="h-52">
             <ResponsiveContainer>
               <AreaChart data={chartData}>
                 <defs>
@@ -340,7 +340,7 @@ export default function ClienteDetalhe() {
         </Card3D>
         <Card3D>
           <p className="mb-2 text-sm font-bold text-slate-900">Evolução do CPL</p>
-          <div className="h-64">
+          <div className="h-52">
             <ResponsiveContainer>
               <LineChart data={chartData}>
                 <defs>
