@@ -213,7 +213,7 @@ export default function ClienteDetalhe() {
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card3D>
-          <div className="mb-1 flex items-center justify-between"><div><p className="text-sm font-bold text-slate-900">Evolução do investimento</p><p className="text-xs text-muted">Gastos por dia, sem projeção. Até 30 barras.</p></div><span className="flex items-center gap-1.5 text-xs text-muted"><span className="h-2 w-2 rounded-full bg-blue-600" />Gasto</span></div>
+          <div className="mb-1 flex items-center justify-between"><div><p className="text-lg font-extrabold tracking-tight text-slate-900">Evolução do investimento</p><p className="text-xs text-muted">Gastos por dia, sem projeção. Até 30 barras.</p></div><span className="flex items-center gap-1.5 text-xs text-muted"><span className="h-2 w-2 rounded-full bg-blue-600" />Gasto</span></div>
           <div className="h-56">
             <ResponsiveContainer>
               <BarChart data={chartData} barCategoryGap="30%">
@@ -240,7 +240,7 @@ export default function ClienteDetalhe() {
 
         <Card3D>
           <p className="text-xs tracking-[0.12em] uppercase text-muted">O que estamos acompanhando</p>
-          <p className="text-sm font-bold text-slate-900">Resumo do gestor</p>
+          <p className="text-lg font-extrabold tracking-tight text-slate-900">Resumo do gestor</p>
           <div className="mt-3 rounded-xl border-l-4 border-blue-600 bg-blue-50/70 p-3 text-sm">{summaries[0]?.content ?? 'A equipe ainda não publicou uma atualização para esta campanha.'}</div>
           <p className="mt-2 text-xs text-muted">Cadastro atualizado em {dateBR(client.updated_at)}. Os números seguem a fonte indicada, não são leitura em tempo real.</p>
           <div className="mt-4 rounded-xl border border-border p-3 text-sm">
@@ -252,8 +252,7 @@ export default function ClienteDetalhe() {
       </div>
 
       <Card3D>
-        <p className="text-sm font-bold text-slate-900">Funil: do clique à conversão</p>
-        <p className="text-xs text-muted">Dados reais da Meta. Alcance não é visita à página — por isso não calculamos % a partir dele.</p>
+        <p className="text-lg font-extrabold tracking-tight text-slate-900">Funil: do clique à conversão</p>
         {(() => {
           const ctr = cur.impr ? (cur.clicks / cur.impr) * 100 : null;
           const leadRate = cur.clicks ? (cur.leads / cur.clicks) * 100 : null;
@@ -300,7 +299,7 @@ export default function ClienteDetalhe() {
       </Card3D>
 
       <Card3D>
-        <p className="text-sm font-bold text-slate-900">Orçamento do período</p>
+        <p className="text-lg font-extrabold tracking-tight text-slate-900">Orçamento do período</p>
         {!client?.orcamento_diario ? <p className="mt-2 text-sm text-muted">Sem orçamento diário definido — nenhum valor fictício exibido.</p> : (
           <div className="mt-3 grid gap-3 sm:grid-cols-4">
             <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Limite do período</p><p className="font-bold">{brl(budgetLimit)}</p><p className="text-xs text-slate-500">{brl(client.orcamento_diario)}/dia × {days}d</p></div>
@@ -313,7 +312,7 @@ export default function ClienteDetalhe() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card3D className="lg:col-span-2">
-          <div className="mb-2 flex items-center justify-between"><p className="text-sm font-bold text-slate-900">Crescimento de leads</p><span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700"><span className="h-2 w-2 rounded-full bg-blue-600" />Novos leads</span></div>
+          <div className="mb-2 flex items-center justify-between"><p className="text-lg font-extrabold tracking-tight text-slate-900">Crescimento de leads</p><span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700"><span className="h-2 w-2 rounded-full bg-blue-600" />Novos leads</span></div>
           <div className="h-64">
             <ResponsiveContainer>
               <AreaChart data={chartData}>
@@ -356,7 +355,7 @@ export default function ClienteDetalhe() {
       </div>
 
       <Card3D className="p-0 overflow-hidden">
-        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Campanhas</p></div>
+        <div className="px-5 py-4"><p className="text-lg font-extrabold tracking-tight text-slate-900">Campanhas</p></div>
         {!campaigns.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhuma campanha sincronizada.</p></div> : (
           <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Impressões</th><th>Alcance</th><th>Cliques</th></tr></thead><tbody>
             {campaigns.map(c => <tr key={c.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{c.name}</td><td>{c.status ?? '—'}</td><td>{brl(c.spend)}</td><td>{num(c.leads)}</td><td className="font-medium">{brl(c.cpl)}</td><td>{num(c.impressions)}</td><td>{num(c.reach)}</td><td>{num(c.clicks)}</td></tr>)}
@@ -365,7 +364,7 @@ export default function ClienteDetalhe() {
       </Card3D>
 
       <Card3D className="p-0 overflow-hidden">
-        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Conjuntos de anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ad_sets</code>. Sem dados = mensagens vazia, sem mock.</p></div>
+        <div className="px-5 py-4"><p className="text-lg font-extrabold tracking-tight text-slate-900">Conjuntos de anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ad_sets</code>. Sem dados = mensagens vazia, sem mock.</p></div>
         {!adSets.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhum conjunto vinculado ainda. Após a sincronização com a Meta, os conjuntos aparecem aqui.</p></div> : (
           <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Campanha</th></tr></thead><tbody>
             {adSets.map(s => <tr key={s.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{s.name}</td><td>{s.status ?? '—'}</td><td>{brl(s.spend)}</td><td>{num(s.leads)}</td><td className="font-medium">{brl(s.cpl)}</td><td className="text-xs text-muted">{s.campaign_external_id ?? '—'}</td></tr>)}
@@ -374,7 +373,7 @@ export default function ClienteDetalhe() {
       </Card3D>
 
       <Card3D className="p-0 overflow-hidden">
-        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ads</code>. Sem dados = mensagens vazia, sem mock.</p></div>
+        <div className="px-5 py-4"><p className="text-lg font-extrabold tracking-tight text-slate-900">Anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ads</code>. Sem dados = mensagens vazia, sem mock.</p></div>
         {!ads.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhum anúncio vinculado ainda.</p></div> : (
           <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Anúncio</th><th>Criativo</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Impressões</th><th>Cliques</th></tr></thead><tbody>
             {ads.map(a => <tr key={a.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{a.name}</td><td>{a.creative_id ?? '—'}</td><td>{brl(a.spend)}</td><td>{num(a.leads)}</td><td className="font-medium">{brl(a.cpl)}</td><td>{num(a.impressions)}</td><td>{num(a.clicks)}</td></tr>)}
@@ -384,7 +383,7 @@ export default function ClienteDetalhe() {
 
       <Card3D className="p-0">
         <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-          <div><p className="text-sm font-bold text-slate-900">Histórico diário</p><p className="text-xs text-muted">Dados lidos via Meta API, no fuso da conta. Dias ausentes não são preenchidos com zero.</p></div>
+          <div><p className="text-lg font-extrabold tracking-tight text-slate-900">Histórico diário</p><p className="text-xs text-muted">Dados lidos via Meta API, no fuso da conta. Dias ausentes não são preenchidos com zero.</p></div>
           <Btn onClick={exportCSV}><Download size={14} /> Exportar diário</Btn>
         </div>
         {!metrics.length ? <div className="px-5 pb-5"><Empty title="Sem dados no período" desc="Sincronize a Meta Ads para popular o histórico." /></div> : (
