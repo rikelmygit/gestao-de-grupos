@@ -414,41 +414,6 @@ export default function ClienteDetalhe() {
       </Card3D>
 
       <Card3D>
-        <p className="text-sm font-bold text-slate-900">Grupos WhatsApp / Telegram — acompanhamento real</p>
-        <p className="text-xs text-muted">Registre 1x/dia o total atual, entradas e saídas observadas. CPR real = gasto / entradas reais. Participantes são contagens observadas, não conversões atribuídas.</p>
-        <div className="mt-3 grid gap-3 sm:grid-cols-4">
-          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Entradas no período</p><p className="font-bold">{snaps == null ? '— Tabela pendente' : num(snapEntriesTotal)}</p></div>
-          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Saídas</p><p className="font-bold">{snaps == null ? '—' : num(snapExitsTotal)}</p></div>
-          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Saldo líquido</p><p className="font-bold">{snaps == null ? '—' : num(netEntries)}</p></div>
-          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">CPR real</p><p className="font-bold">{cprReal != null ? brl(cprReal) : snaps == null ? 'Rode migração 003' : 'sem entradas'}</p></div>
-        </div>
-        {snaps == null ? (
-          <div className="mt-3 rounded-xl border border-dashed border-border p-4 text-sm text-muted">Rode a migração <code>003_grupos.sql</code> para ativar o acompanhamento de grupos.</div>
-        ) : (
-          <>
-            <div className="mt-3 grid gap-3 sm:grid-cols-5">
-              <label className="block"><span className="mb-1.5 block text-xs font-semibold text-slate-600">Plataforma</span><select value={snapPlatform} onChange={e => setSnapPlatform(e.target.value as any)} className="w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm"><option value="whatsapp">WhatsApp</option><option value="telegram">Telegram</option></select></label>
-              <Input label="Data" type="date" value={snapDate} onChange={(e: any) => setSnapDate(e.target.value)} />
-              <Input label="Total atual" type="number" value={snapMembers} onChange={(e: any) => setSnapMembers(e.target.value)} />
-              <Input label="Entradas" type="number" value={snapEntries} onChange={(e: any) => setSnapEntries(e.target.value)} />
-              <Input label="Saídas" type="number" value={snapExits} onChange={(e: any) => setSnapExits(e.target.value)} />
-            </div>
-            <Primary className="mt-3" onClick={saveSnap}>Registrar snapshot</Primary>
-            {snaps.length ? (
-              <div className="mt-3 divide-y divide-border">
-                {snaps.map((s: any) => (
-                  <div key={s.id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm">
-                    <span>{dateBR(s.snapshot_date)} • {s.platform} • membros {num(s.member_count)} • +{num(s.entries)} / -{num(s.exits)}</span>
-                    <Btn onClick={() => removeSnap(s)} className="px-2 py-1 text-xs">Remover</Btn>
-                  </div>
-                ))}
-              </div>
-            ) : <p className="mt-3 text-sm text-muted">Nenhum snapshot no período.</p>}
-          </>
-        )}
-      </Card3D>
-
-      <Card3D>
         <p className="text-sm font-bold text-slate-900 mb-3">Ações da operação</p>
         {actions === null ? (
           <div className="rounded-xl border border-dashed border-border p-4 text-sm text-muted">Tabela de ações ainda não criada. Rode a migração <code>002_acoes_funnel.sql</code> no Lovable Cloud → SQL Editor.</div>
