@@ -161,6 +161,16 @@ export default function ClienteDetalhe() {
     if (error) alert(error.message); else { setActionText(''); setResp(''); setDeadline(''); load(); }
   }
   async function changeStatus(a: any, st: string) { await supabase.from('operation_actions').update({ status: st, updated_at: new Date().toISOString() }).eq('id', a.id); load(); }
+  async function handleLogo(e: any) {
+    const f = e.target.files?.[0];
+    if (!f || !id) return;
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const { error } = await supabase.from('clients').update({ logo_url: reader.result as string, updated_at: new Date().toISOString() }).eq('id', id);
+      if (error) alert(error.message); else load();
+    };
+    reader.readAsDataURL(f);
+  }
   async function saveSnap() {
     if (!id || !snapDate || !snapMembers) { alert('Informe data e total atual.'); return; }
     const { error } = await supabase.from('group_snapshots').upsert({ client_id: id, platform: snapPlatform, snapshot_date: snapDate, member_count: Number(snapMembers), entries: Number(snapEntries || 0), exits: Number(snapExits || 0), updated_at: new Date().toISOString() }, { onConflict: 'client_id,platform,snapshot_date' });
@@ -185,14 +195,20 @@ export default function ClienteDetalhe() {
       <div className="relative overflow-hidden rounded-[24px] bg-white shadow-[0_24px_60px_-20px_rgba(37,99,235,0.35)] ring-1 ring-slate-200">
         <div className="h-1.5 bg-gradient-to-r from-blue-600 via-sky-500 to-violet-600" />
         <div className="flex flex-wrap items-center gap-5 p-6">
-          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 text-2xl font-extrabold text-white shadow-lg shadow-blue-500/40">{(client.nome_negocio ?? 'C').slice(0, 1).toUpperCase()}</div>
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-col items-center">
+            {client.logo_url ? (
+              <img src={client.logo_url} alt="Logo" className="h-16 w-16 rounded-2xl object-cover shadow-lg shadow-blue-500/30 ring-1 ring-slate-200" />
+            ) : (
+              <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 text-2xl font-extrabold text-white shadow-lg shadow-blue-500/40">{(client.nome_negocio ?? 'C').slice(0, 1).toUpperCase()}</div>
+            )}
+            <label className="mt-1 cursor-pointer text-xs font-semibold text-blue-600 hover:underline">Trocar imagem<input type="file" accept="image/*" className="hidden" onChange={handleLogo} /></label>
+          </div>
+          <div className="min-w-0 flex-1 text-center">
+            <div className="flex flex-wrap items-center justify-center gap-2">
               <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{client.nome_negocio}</h1>
               <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700">{client.status}</span>
             </div>
             <p className="mt-1 text-sm font-medium text-slate-600">{client.nome_responsavel ?? '—'} • {client.nicho ?? '—'}</p>
-            <p className="mt-1 text-xs text-muted">Período: <b className="text-slate-800">{periodLabel(range.from, range.to)}</b> • Última sincronização: <b className="text-slate-800">{syncAt ? dateTimeBR(syncAt) : 'não sincronizado'}</b></p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <select value={period} onChange={e => setPeriod(e.target.value as PeriodKey)} className="rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm font-semibold shadow-sm"><option value="hoje">Hoje</option><option value="ontem">Ontem</option><option value="7d">Últimos 7 dias</option><option value="15d">Últimos 15 dias</option><option value="30d">Últimos 30 dias</option><option value="mes">Este mês</option><option value="custom">Personalizado</option></select>
