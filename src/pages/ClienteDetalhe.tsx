@@ -273,7 +273,8 @@ export default function ClienteDetalhe() {
             { label: 'Alcance', value: cur.reach, grad: 'from-sky-500 to-blue-500', note: 'pessoas únicas' },
             { label: 'Cliques', value: cur.clicks, grad: 'from-blue-500 to-blue-600', note: ctr != null ? `CTR ${ctr.toFixed(1).replace('.', ',')}%` : '—' },
             { label: 'Leads (Meta)', value: cur.leads, grad: 'from-blue-600 to-violet-600', note: leadRate != null ? `Clique → Lead ${leadRate.toFixed(1).replace('.', ',')}%` : '—' },
-            { label: 'Entradas no grupo', value: null as any, grad: 'from-violet-500 to-purple-500', note: 'Não disponível — requer registro/integração' },
+            { label: 'CPL', value: cur.cpl as any, grad: 'from-amber-500 to-orange-500', note: `Meta ${brl(meta)}`, isMoney: true },
+            { label: 'Valor investido', value: cur.invest as any, grad: 'from-emerald-500 to-emerald-600', note: 'gasto no período', isMoney: true },
           ];
           return (
             <div className="mt-4 space-y-3">
@@ -293,9 +294,10 @@ export default function ClienteDetalhe() {
                         'linear-gradient(90deg,#0EA5E9,#0369A1)',
                         'linear-gradient(90deg,#0284C7,#1D4ED8)',
                         'linear-gradient(90deg,#1D4ED8,#7C3AED)',
-                        'linear-gradient(90deg,#7C3AED,#A855F7)',
-                      ][Math.min(i, 4)] }}>
-                        <span className={isPending ? 'text-xs text-slate-500' : 'text-sm font-bold text-white'}>{isPending ? '—' : num(s.value)}</span>
+                        'linear-gradient(90deg,#F59E0B,#F97316)',
+                        'linear-gradient(90deg,#10B981,#059669)',
+                      ][Math.min(i, 5)] }}>
+                        <span className={isPending ? 'text-xs text-slate-500' : 'text-sm font-bold text-white'}>{isPending ? '—' : (s as any).isMoney ? brl(s.value) : num(s.value)}</span>
                       </div>
                     </div>
                   </div>
@@ -392,12 +394,12 @@ export default function ClienteDetalhe() {
         {!metrics.length ? <div className="px-5 pb-5"><Empty title="Sem dados no período" desc="Sincronize a Meta Ads para popular o histórico." /></div> : (
           <div className="overflow-x-auto px-2 pb-2">
             <table className="w-full text-sm">
-              <thead><tr className="bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-4 py-3">Dia</th><th>Gasto</th><th>Leads</th><th>CPL</th><th>Cliques</th><th>Impressões</th><th>Fonte</th></tr></thead>
+              <thead><tr className="bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-4 py-3">Dia</th><th>Impressões</th><th>Alcance</th><th>Cliques</th><th>Leads</th><th>CPL</th><th>Investido</th><th>Fonte</th></tr></thead>
               <tbody>
                 {[...metrics].reverse().map(r => (
                   <tr key={r.id} className="border-b border-border hover:bg-blue-50/50">
                     <td className="px-4 py-3 font-semibold">{dateBR(r.date)}</td>
-                    <td>{brl(r.spend)}</td><td>{num(r.leads)}</td><td>{brl(r.leads ? Number(r.spend) / Number(r.leads) : null)}</td><td>{num(r.clicks)}</td><td>{num(r.impressions)}</td><td><Badge tone="info">Meta API</Badge></td>
+                    <td>{num(r.impressions)}</td><td>{num(r.reach)}</td><td>{num(r.clicks)}</td><td>{num(r.leads)}</td><td>{brl(r.leads ? Number(r.spend) / Number(r.leads) : null)}</td><td>{brl(r.spend)}</td><td><Badge tone="info">Meta API</Badge></td>
                   </tr>
                 ))}
               </tbody>
