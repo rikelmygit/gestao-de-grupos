@@ -48,6 +48,8 @@ export default function ClienteDetalhe() {
   const [metrics, setMetrics] = useState<any[]>([]);
   const [prevMetrics, setPrevMetrics] = useState<any[]>([]);
   const [campaigns, setCampaigns] = useState<any[]>([]);
+  const [adSets, setAdSets] = useState<any[]>([]);
+  const [ads, setAds] = useState<any[]>([]);
   const [summaries, setSummaries] = useState<any[]>([]);
   const [actions, setActions] = useState<any[]>([]);
   const [salesRows, setSalesRows] = useState<any[] | null>(null);
@@ -74,11 +76,13 @@ export default function ClienteDetalhe() {
 
   async function load() {
     if (!id) return; setLoading(true);
-    const [cRes, mRes, pmRes, campRes, sumRes, actRes, saleRes, qualRes, snapRes] = await Promise.all([
+    const [cRes, mRes, pmRes, campRes, setRes, adsRes, sumRes, actRes, saleRes, qualRes, snapRes] = await Promise.all([
       supabase.from('clients').select('*').eq('id', id).single(),
       supabase.from('performance_metrics').select('*').eq('client_id', id).gte('date', range.from).lte('date', range.to).order('date'),
       supabase.from('performance_metrics').select('*').eq('client_id', id).gte('date', prev.from).lte('date', prev.to).order('date'),
       supabase.from('campaigns').select('*').eq('client_id', id).order('name'),
+      supabase.from('ad_sets').select('*').eq('client_id', id).order('name'),
+      supabase.from('ads').select('*').eq('client_id', id).order('name'),
       supabase.from('operation_summaries').select('*').eq('client_id', id).order('created_at', { ascending: false }),
       supabase.from('operation_actions').select('*').eq('client_id', id).order('created_at', { ascending: false }),
       supabase.from('sales_results').select('*').eq('client_id', id).gte('date', range.from).lte('date', range.to).order('date'),
@@ -90,6 +94,8 @@ export default function ClienteDetalhe() {
     setMetrics(mRes.data ?? []);
     setPrevMetrics(pmRes.data ?? []);
     setCampaigns(campRes.data ?? []);
+    setAdSets(setRes.data ?? []);
+    setAds(adsRes.data ?? []);
     setSummaries(sumRes.data ?? []);
     setSummary(sumRes.data?.[0]?.content ?? cRes.data?.resumo_operacao ?? '');
     const lastUpd = [...(mRes.data ?? []), ...(campRes.data ?? [])].map((r: any) => r.updated_at).filter(Boolean).sort().pop();
@@ -352,10 +358,28 @@ export default function ClienteDetalhe() {
       </div>
 
       <Card3D className="p-0 overflow-hidden">
-        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Campanhas e recomendações</p><p className="text-xs text-muted">Recomendações são sugestões — nada é pausado automaticamente.</p></div>
+        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Campanhas</p></div>
         {!campaigns.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhuma campanha sincronizada.</p></div> : (
-          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Situação</th><th>Recomendação</th></tr></thead><tbody>
-            {campaigns.map(c => { const r = recommendation(c); return <tr key={c.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{c.name}</td><td>{c.status ?? '—'}</td><td>{brl(c.spend)}</td><td>{num(c.leads)}</td><td className="font-medium">{brl(c.cpl)}</td><td><Badge tone={r.tone}>{r.tone === 'ok' ? 'Dentro da meta' : r.tone === 'bad' ? 'Atenção' : 'Monitorar'}</Badge></td><td className="max-w-xs text-xs text-slate-600">{r.text}</td></tr>; })}
+          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Impressões</th><th>Alcance</th><th>Cliques</th></tr></thead><tbody>
+            {campaigns.map(c => <tr key={c.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{c.name}</td><td>{c.status ?? '—'}</td><td>{brl(c.spend)}</td><td>{num(c.leads)}</td><td className="font-medium">{brl(c.cpl)}</td><td>{num(c.impressions)}</td><td>{num(c.reach)}</td><td>{num(c.clicks)}</td></tr>)}
+          </tbody></table></div>
+        )}
+      </Card3D>
+
+      <Card3D className="p-0 overflow-hidden">
+        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Conjuntos de anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ad_sets</code>. Sem dados = mensagens vazia, sem mock.</p></div>
+        {!adSets.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhum conjunto vinculado ainda. Após a sincronização com a Meta, os conjuntos aparecem aqui.</p></div> : (
+          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Campanha</th></tr></thead><tbody>
+            {adSets.map(s => <tr key={s.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{s.name}</td><td>{s.status ?? '—'}</td><td>{brl(s.spend)}</td><td>{num(s.leads)}</td><td className="font-medium">{brl(s.cpl)}</td><td className="text-xs text-muted">{s.campaign_external_id ?? '—'}</td></tr>)}
+          </tbody></table></div>
+        )}
+      </Card3D>
+
+      <Card3D className="p-0 overflow-hidden">
+        <div className="px-5 py-4"><p className="text-sm font-bold text-slate-900">Anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ads</code>. Sem dados = mensagens vazia, sem mock.</p></div>
+        {!ads.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhum anúncio vinculado ainda.</p></div> : (
+          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Anúncio</th><th>Criativo</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Impressões</th><th>Cliques</th></tr></thead><tbody>
+            {ads.map(a => <tr key={a.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{a.name}</td><td>{a.creative_id ?? '—'}</td><td>{brl(a.spend)}</td><td>{num(a.leads)}</td><td className="font-medium">{brl(a.cpl)}</td><td>{num(a.impressions)}</td><td>{num(a.clicks)}</td></tr>)}
           </tbody></table></div>
         )}
       </Card3D>
