@@ -6,7 +6,7 @@ import { Card, Empty, ErrorBox, Loading, Badge, Btn, Primary, Input } from '@/co
 import { brl, num, dateBR, dateTimeBR, pct, periodLabel } from '@/lib/format';
 import { periodRange, type PeriodKey } from '@/types/database';
 import { ResponsiveContainer, BarChart, Bar, LineChart, Line, AreaChart, Area, CartesianGrid, Tooltip, XAxis, YAxis, Cell, LabelList } from 'recharts';
-import { DollarSign, ShoppingBag, Target, CalendarDays, Download, Users } from 'lucide-react';
+import { DollarSign, UserPlus, Coins, Target, CalendarDays, Download, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const tipStyle = { background: 'rgba(255,255,255,0.95)', border: '1px solid #E2E8F0', borderRadius: 14, boxShadow: '0 20px 40px rgba(15,23,42,0.15)', fontSize: 12, backdropFilter: 'blur(8px)' };
@@ -210,8 +210,8 @@ export default function ClienteDetalhe() {
 
       <div className="grid gap-3 sm:grid-cols-4">
         <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"><DollarSign size={18} /></div><div><p className="text-xs text-muted">Investimento total</p><p className="text-[22px] font-extrabold text-slate-900">{brl(cur.invest)}</p></div></div></Card3D>
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/30"><ShoppingBag size={18} /></div><div><p className="text-xs text-muted">Leads gerados</p><p className="text-[22px] font-extrabold text-slate-900">{num(cur.leads)}</p></div></div></Card3D>
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30"><Target size={18} /></div><div><p className="text-xs text-muted">CPL</p><p className="text-[22px] font-extrabold text-slate-900">{brl(cur.cpl)}</p></div></div><div className="mt-2">{onMeta}</div></Card3D>
+        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/30"><UserPlus size={18} /></div><div><p className="text-xs text-muted">Leads gerados</p><p className="text-[22px] font-extrabold text-slate-900">{num(cur.leads)}</p></div></div></Card3D>
+        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30"><Coins size={18} /></div><div><p className="text-xs text-muted">CPL</p><p className="text-[22px] font-extrabold text-slate-900">{brl(cur.cpl)}</p></div></div><div className="mt-2">{onMeta}</div></Card3D>
         <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500 text-white shadow-lg shadow-sky-500/30"><CalendarDays size={18} /></div><div><p className="text-xs text-muted">Meta de CPL</p><p className="text-[22px] font-extrabold text-slate-900">{brl(meta)}</p></div></div></Card3D>
       </div>
 

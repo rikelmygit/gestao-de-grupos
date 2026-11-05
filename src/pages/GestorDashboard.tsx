@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, Empty, ErrorBox, Loading, Badge } from '@/components/UI';
 import { brl, num } from '@/lib/format';
 import { periodRange, type Client, type PeriodKey } from '@/types/database';
-import { Users, DollarSign, Target, ShoppingBag, CheckCircle2, AlertCircle, CalendarDays } from 'lucide-react';
+import { Users, DollarSign, Coins, UserPlus, CheckCircle2, AlertCircle, CalendarDays } from 'lucide-react';
 
 export default function GestorDashboard() {
   const [period, setPeriod] = useState<PeriodKey>('30d');
@@ -38,8 +38,8 @@ export default function GestorDashboard() {
   const cards = [
     { k: 'Clientes ativos', v: num(active.length), icon: Users, tone: 'from-blue-500 to-blue-600 text-white shadow-blue-500/30' },
     { k: 'Investimento total', v: brl(totalInvest), icon: DollarSign, tone: 'from-emerald-500 to-emerald-600 text-white shadow-emerald-500/30' },
-    { k: 'Leads gerados', v: num(totalLeads), icon: ShoppingBag, tone: 'from-violet-500 to-purple-600 text-white shadow-violet-500/30' },
-    { k: 'CPL médio', v: brl(avgCpl), icon: Target, tone: 'from-amber-500 to-orange-500 text-white shadow-amber-500/30' },
+    { k: 'Leads gerados', v: num(totalLeads), icon: UserPlus, tone: 'from-violet-500 to-purple-600 text-white shadow-violet-500/30' },
+    { k: 'CPL médio', v: brl(avgCpl), icon: Coins, tone: 'from-amber-500 to-orange-500 text-white shadow-amber-500/30' },
     { k: 'Orçamento diário', v: brl(dailyBudget), icon: CalendarDays, tone: 'from-sky-500 to-cyan-500 text-white shadow-sky-500/30' },
     { k: 'Dentro da meta', v: num(inside), icon: CheckCircle2, tone: 'from-emerald-500 to-teal-500 text-white shadow-emerald-500/30' },
     { k: 'Acima da meta', v: num(above), icon: AlertCircle, tone: 'from-rose-500 to-red-500 text-white shadow-rose-500/30' },
