@@ -182,58 +182,33 @@ export default function ClienteDetalhe() {
 
   return (
     <div className="space-y-5">
-      <div className="relative overflow-hidden rounded-[22px] border border-white/60 bg-gradient-to-r from-blue-600 via-blue-500 to-violet-600 p-[1px] shadow-[0_20px_50px_-20px_rgba(37,99,235,0.45)]">
-        <div className="rounded-[21px] bg-white/95 p-5 backdrop-blur">
-          <div className="flex flex-wrap items-start justify-between gap-3">
-            <div>
-              <h1 className="bg-gradient-to-r from-blue-700 to-violet-600 bg-clip-text text-xl font-extrabold tracking-tight text-transparent">{client.nome_negocio}</h1>
-              <p className="text-sm text-muted">{client.nome_responsavel ?? ''} • {client.nicho ?? ''} • {client.status}</p>
-              <p className="mt-1 text-xs text-muted">Período: <b className="text-slate-800">{periodLabel(range.from, range.to)}</b> ({days} dias) • Última sincronização: <b className="text-slate-800">{syncAt ? dateTimeBR(syncAt) : 'não sincronizado'}</b></p>
-            </div>
+      <div className="relative overflow-hidden rounded-[24px] bg-white shadow-[0_24px_60px_-20px_rgba(37,99,235,0.35)] ring-1 ring-slate-200">
+        <div className="h-1.5 bg-gradient-to-r from-blue-600 via-sky-500 to-violet-600" />
+        <div className="flex flex-wrap items-center gap-5 p-6">
+          <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 text-2xl font-extrabold text-white shadow-lg shadow-blue-500/40">{(client.nome_negocio ?? 'C').slice(0, 1).toUpperCase()}</div>
+          <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <select value={period} onChange={e => setPeriod(e.target.value as PeriodKey)} className="rounded-xl border border-border bg-white px-3 py-2.5 text-sm font-medium shadow-sm"><option value="hoje">Hoje</option><option value="ontem">Ontem</option><option value="7d">Últimos 7 dias</option><option value="15d">Últimos 15 dias</option><option value="30d">Últimos 30 dias</option><option value="mes">Este mês</option><option value="custom">Personalizado</option></select>
-              {period === 'custom' && <><Input type="date" value={custom.from} onChange={(e: any) => setCustom({ ...custom, from: e.target.value })} /><Input type="date" value={custom.to} onChange={(e: any) => setCustom({ ...custom, to: e.target.value })} /></>}
-              <Btn onClick={syncMeta}>{client.ad_account_id ? 'Sincronizar Meta Ads' : 'Integração pendente'}</Btn>
+              <h1 className="text-2xl font-extrabold tracking-tight text-slate-900">{client.nome_negocio}</h1>
+              <span className="rounded-full border border-emerald-200 bg-emerald-50 px-2.5 py-0.5 text-xs font-bold text-emerald-700">{client.status}</span>
             </div>
+            <p className="mt-1 text-sm font-medium text-slate-600">{client.nome_responsavel ?? '—'} • {client.nicho ?? '—'}</p>
+            <p className="mt-1 text-xs text-muted">Período: <b className="text-slate-800">{periodLabel(range.from, range.to)}</b> • Última sincronização: <b className="text-slate-800">{syncAt ? dateTimeBR(syncAt) : 'não sincronizado'}</b></p>
+          </div>
+          <div className="flex flex-wrap items-center gap-2">
+            <select value={period} onChange={e => setPeriod(e.target.value as PeriodKey)} className="rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm font-semibold shadow-sm"><option value="hoje">Hoje</option><option value="ontem">Ontem</option><option value="7d">Últimos 7 dias</option><option value="15d">Últimos 15 dias</option><option value="30d">Últimos 30 dias</option><option value="mes">Este mês</option><option value="custom">Personalizado</option></select>
+            {period === 'custom' && <><Input type="date" value={custom.from} onChange={(e: any) => setCustom({ ...custom, from: e.target.value })} /><Input type="date" value={custom.to} onChange={(e: any) => setCustom({ ...custom, to: e.target.value })} /></>}
+            <Btn onClick={syncMeta}>{client.ad_account_id ? 'Sincronizar Meta Ads' : 'Integração pendente'}</Btn>
           </div>
         </div>
       </div>
 
       {syncMsg && <div className={syncMsg.includes('pendente') || syncMsg.includes('Erro') ? 'rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800' : 'rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800'}>{syncMsg}</div>}
 
-      <Card3D>
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <p className="text-base font-extrabold tracking-tight text-slate-900">Comparação com período anterior</p>
-          <span className="rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">{periodLabel(prev.from, prev.to)}</span>
-          <label className="flex items-center gap-2 text-xs font-semibold text-slate-600"><input type="checkbox" checked={compare} onChange={e => setCompare(e.target.checked)} className="h-4 w-4 rounded accent-blue-600" /> Mostrar comparação</label>
-        </div>
-        <div className="mt-4 grid gap-4 sm:grid-cols-3">
-          <div className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-blue-100/50 p-4 shadow-sm">
-            <p className="text-sm font-semibold tracking-wide text-slate-600 uppercase">Investimento</p>
-            <p className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900">{brl(cur.invest)}</p>
-            <p className="mt-1 text-sm text-slate-600">vs <b>{brl(prv.invest)}</b></p>
-            <p className="text-xs font-semibold text-blue-700">{diffLabel(cur.invest, prv.invest, true)} {pct(variation(cur.invest, prv.invest))}</p>
-          </div>
-          <div className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-violet-100/50 p-4 shadow-sm">
-            <p className="text-sm font-semibold tracking-wide text-slate-600 uppercase">Leads</p>
-            <p className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900">{num(cur.leads)}</p>
-            <p className="mt-1 text-sm text-slate-600">vs <b>{num(prv.leads)}</b></p>
-            <p className="text-xs font-semibold text-violet-700">{diffLabel(cur.leads, prv.leads)} {pct(variation(cur.leads, prv.leads))}</p>
-          </div>
-          <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-amber-100/50 p-4 shadow-sm">
-            <p className="text-sm font-semibold tracking-wide text-slate-600 uppercase">CPL</p>
-            <p className="mt-1 text-2xl font-extrabold tracking-tight text-slate-900">{brl(cur.cpl)}</p>
-            <p className="mt-1 text-sm text-slate-600">vs <b>{brl(prv.cpl)}</b></p>
-            <p className="text-xs font-semibold text-amber-700">{diffLabel(cur.cpl, prv.cpl, true)} {pct(variation(cur.cpl, prv.cpl))}</p>
-          </div>
-        </div>
-      </Card3D>
-
-      <div className="grid gap-3 sm:grid-cols-4">
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/30"><DollarSign size={18} /></div><div><p className="text-xs text-muted">Investimento total</p><p className="text-[22px] font-extrabold text-slate-900">{brl(cur.invest)}</p></div></div></Card3D>
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/30"><UserPlus size={18} /></div><div><p className="text-xs text-muted">Leads gerados</p><p className="text-[22px] font-extrabold text-slate-900">{num(cur.leads)}</p></div></div></Card3D>
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/30"><Coins size={18} /></div><div><p className="text-xs text-muted">CPL</p><p className="text-[22px] font-extrabold text-slate-900">{brl(cur.cpl)}</p></div></div><div className="mt-2">{onMeta}</div></Card3D>
-        <Card3D><div className="flex items-center gap-3"><div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500 text-white shadow-lg shadow-sky-500/30"><Target size={18} /></div><div><p className="text-xs text-muted">Meta de CPL</p><p className="text-[22px] font-extrabold text-slate-900">{brl(meta)}</p></div></div></Card3D>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <Card3D className="p-6"><div className="flex items-center gap-4"><div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/40"><DollarSign size={26} /></div><div><p className="text-sm font-semibold text-slate-500">Investimento total</p><p className="text-[28px] font-extrabold leading-none tracking-tight text-slate-900">{brl(cur.invest)}</p></div></div></Card3D>
+        <Card3D className="p-6"><div className="flex items-center gap-4"><div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-lg shadow-violet-500/40"><UserPlus size={26} /></div><div><p className="text-sm font-semibold text-slate-500">Leads gerados</p><p className="text-[28px] font-extrabold leading-none tracking-tight text-slate-900">{num(cur.leads)}</p></div></div></Card3D>
+        <Card3D className="p-6"><div className="flex items-center gap-4"><div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-lg shadow-amber-500/40"><Coins size={26} /></div><div><p className="text-sm font-semibold text-slate-500">CPL</p><p className="text-[28px] font-extrabold leading-none tracking-tight text-slate-900">{brl(cur.cpl)}</p></div></div><div className="mt-3">{onMeta}</div></Card3D>
+        <Card3D className="p-6"><div className="flex items-center gap-4"><div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-500 to-cyan-500 text-white shadow-lg shadow-sky-500/40"><Target size={26} /></div><div><p className="text-sm font-semibold text-slate-500">Meta de CPL</p><p className="text-[28px] font-extrabold leading-none tracking-tight text-slate-900">{brl(meta)}</p></div></div></Card3D>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
