@@ -299,14 +299,17 @@ export default function ClienteDetalhe() {
       </Card3D>
 
       <Card3D>
-        <p className="text-lg font-extrabold tracking-tight text-slate-900">Orçamento do período</p>
-        {!client?.orcamento_diario ? <p className="mt-2 text-sm text-muted">Sem orçamento diário definido — nenhum valor fictício exibido.</p> : (
-          <div className="mt-3 grid gap-3 sm:grid-cols-4">
-            <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Limite do período</p><p className="font-bold">{brl(budgetLimit)}</p><p className="text-xs text-slate-500">{brl(client.orcamento_diario)}/dia × {days}d</p></div>
-            <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Gasto</p><p className="font-bold">{brl(cur.invest)}</p></div>
-            <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Saldo</p><p className="font-bold">{brl(balance)}</p><p className="text-xs text-slate-500">{budgetPct == null ? '—' : budgetPct.toFixed(1) + '% do limite'}</p></div>
-            <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Previsão (ritmo atual)</p><p className="font-bold">{brl(forecast)}</p><p className="text-xs text-slate-500">{brl(avgDay)}/dia em média</p></div>
-          </div>
+        <div className="mb-3 flex items-center justify-between"><p className="text-lg font-bold text-slate-900">Orçamento do período</p><span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">{periodLabel(range.from, range.to)}</span></div>
+        {!client?.orcamento_diario ? <p className="mt-2 text-sm text-slate-600">Sem orçamento diário definido — nenhum valor fictício exibido.</p> : (
+          <>
+            <div className="grid gap-4 sm:grid-cols-4">
+              <div className="rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 to-blue-100/50 p-4 shadow-sm"><p className="text-xs font-semibold tracking-wide text-slate-500 uppercase">Limite do período</p><p className="mt-1 text-2xl font-extrabold text-slate-900">{brl(budgetLimit)}</p><p className="mt-1 text-xs text-slate-600">{brl(client.orcamento_diario)}/dia × {days}d</p></div>
+              <div className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-violet-100/50 p-4 shadow-sm"><p className="text-xs font-semibold tracking-wide text-slate-500 uppercase">Gasto</p><p className="mt-1 text-2xl font-extrabold text-slate-900">{brl(cur.invest)}</p><p className="mt-1 text-xs text-muted">no período selecionado</p></div>
+              <div className={`rounded-2xl border p-4 shadow-sm ${(balance ?? 0) < 0 ? 'border-red-200 bg-gradient-to-br from-red-50 to-red-100/60' : 'border-emerald-100 bg-gradient-to-br from-emerald-50 to-emerald-100/50'}`}><p className="text-xs font-semibold tracking-wide text-slate-500 uppercase">Saldo</p><p className={`mt-1 text-2xl font-extrabold ${(balance ?? 0) < 0 ? 'text-red-600' : 'text-slate-900'}`}>{brl(balance)}</p><p className="mt-1 text-xs text-slate-600">{budgetPct == null ? '—' : budgetPct.toFixed(1).replace('.', ',') + '% do limite'}</p>{budgetPct != null && <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-200"><div className={`h-full rounded-full ${(balance ?? 0) < 0 ? 'bg-red-500' : 'bg-emerald-500'}`} style={{ width: Math.min(100, budgetPct) + '%' }} /></div>}</div>
+              <div className="rounded-2xl border border-amber-100 bg-gradient-to-br from-amber-50 to-amber-100/50 p-4 shadow-sm"><p className="text-xs font-semibold tracking-wide text-slate-500 uppercase">Previsão (ritmo atual)</p><p className="mt-1 text-2xl font-extrabold text-slate-900">{brl(forecast)}</p><p className="mt-1 text-xs text-muted">{brl(avgDay)}/dia em média</p></div>
+            </div>
+            <p className="mt-3 text-xs text-muted">Todos os valores usam o período selecionado no topo ({periodLabel(range.from, range.to)}).</p>
+          </>
         )}
       </Card3D>
 
