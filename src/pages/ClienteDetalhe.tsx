@@ -114,7 +114,7 @@ export default function ClienteDetalhe() {
   const cur = summarize(metrics);
   const prv = summarize(prevMetrics);
   const days = Math.max(1, Math.round((new Date(range.to + 'T12:00:00').getTime() - new Date(range.from + 'T12:00:00').getTime()) / 86400000) + 1);
-  const chartData = metrics.map(r => ({ date: r.date.slice(5), full: r.date, Investimento: Number(r.spend ?? 0), Leads: Number(r.leads ?? 0), CPL: r.leads ? Number(r.spend ?? 0) / Number(r.leads) : 0 }));
+  const chartData = metrics.map(r => ({ date: r.date.slice(8,10) + "/" + r.date.slice(5,7) + "/" + r.date.slice(0,4), full: r.date, Investimento: Number(r.spend ?? 0), Leads: Number(r.leads ?? 0), CPL: r.leads ? Number(r.spend ?? 0) / Number(r.leads) : 0 }));
 
   const meta = client?.meta_cpl != null ? Number(client.meta_cpl) : null;
   const metaDiff = cur.cpl != null && meta != null ? cur.cpl - meta : null;
@@ -253,8 +253,7 @@ export default function ClienteDetalhe() {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <p className="text-xs text-muted">Somente dias com registro. Passe sobre as barras para ver valores.</p>
-        </Card3D>
+          </Card3D>
 
       <Card3D>
         <p className="text-lg font-extrabold tracking-tight text-slate-900">Funil: do clique à conversão</p>
@@ -300,8 +299,7 @@ export default function ClienteDetalhe() {
             </div>
           );
         })()}
-        <p className="mt-3 text-xs text-muted">Conversas iniciadas e entradas no grupo não são estimadas sem webhook/registro manual.</p>
-      </Card3D>
+        </Card3D>
 
       <Card3D>
         <div className="mb-3 flex items-center justify-between"><p className="text-lg font-bold text-slate-900">Orçamento do período</p><span className="rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600">{periodLabel(range.from, range.to)}</span></div>
