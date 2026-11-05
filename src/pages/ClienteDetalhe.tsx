@@ -310,20 +310,6 @@ export default function ClienteDetalhe() {
       </Card3D>
 
       <Card3D>
-        <p className="text-sm font-bold text-slate-900">Resultado para o cliente</p>
-        {salesRows === null ? <div className="mt-2 rounded-xl border border-dashed border-border p-4 text-sm text-muted">Tabela de vendas ainda não criada. Rode a migração <code>002_acoes_funnel.sql</code>. Sem integração, vendas/receita/ROAS não são exibidos.</div>
-        : salesRows.length === 0 ? <div className="mt-2 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm">Vendas e receita ainda não são acompanhadas neste cliente.</div>
-        : <div className="mt-3 grid gap-3 sm:grid-cols-3"><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Vendas</p><p className="font-bold">{num(salesTotal)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Receita</p><p className="font-bold">{brl(revTotal)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">ROAS</p><p className="font-bold">{roas == null ? '—' : roas.toLocaleString('pt-BR', { maximumFractionDigits: 2 }) + 'x'}</p></div></div>}
-      </Card3D>
-
-      <Card3D>
-        <p className="text-sm font-bold text-slate-900">Qualidade e retenção dos leads</p>
-        {qualityRows === null ? <div className="mt-2 rounded-xl border border-dashed border-border p-4 text-sm text-muted">Tabela de qualidade ainda não criada. Rode a migração <code>002</code>.</div>
-        : qualityRows.length === 0 ? <p className="mt-2 text-sm text-muted">Nenhum dado de qualidade no período. Leads válidos/inválidos/duplicados e retenção precisam ser registrados/integrados.</p>
-        : <div className="mt-3 grid gap-3 sm:grid-cols-4"><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Válidos</p><p className="font-bold">{num(qValid)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Inválidos</p><p className="font-bold">{num(qInvalid)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Duplicados</p><p className="font-bold">{num(qDup)}</p></div><div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Retenção 7d</p><p className="font-bold">{num(qRet7)}</p></div></div>}
-      </Card3D>
-
-      <Card3D>
         <p className="text-sm font-bold text-slate-900">Orçamento do período</p>
         {!client?.orcamento_diario ? <p className="mt-2 text-sm text-muted">Sem orçamento diário definido — nenhum valor fictício exibido.</p> : (
           <div className="mt-3 grid gap-3 sm:grid-cols-4">
@@ -467,16 +453,6 @@ export default function ClienteDetalhe() {
         )}
       </Card3D>
 
-      <Card3D>
-        <p className="mb-2 text-sm font-bold text-slate-900">Resumo da operação — histórico</p>
-        <textarea value={summary} onChange={e => setSummary(e.target.value)} rows={3} className="w-full rounded-xl border border-border bg-white p-3.5 text-sm shadow-sm outline-none focus:border-blue-500" placeholder="Nova atualização..." />
-        <Primary className="mt-3" onClick={saveSummary}>Publicar atualização</Primary>
-        <div className="mt-4 space-y-3">
-          {summaries.length === 0 ? <p className="text-sm text-muted">Nenhum registro ainda.</p> : summaries.map((s: any) => (
-            <div key={s.id} className="rounded-xl border border-border bg-gradient-to-br from-white to-slate-50 p-3 text-sm shadow-sm"><p className="whitespace-pre-wrap">{s.content}</p><p className="mt-1 text-xs text-muted">{dateTimeBR(s.created_at)}</p></div>
-          ))}
-        </div>
-      </Card3D>
     </div>
   );
 }
