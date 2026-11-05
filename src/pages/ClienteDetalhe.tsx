@@ -52,6 +52,12 @@ export default function ClienteDetalhe() {
   const [actions, setActions] = useState<any[]>([]);
   const [salesRows, setSalesRows] = useState<any[] | null>(null);
   const [qualityRows, setQualityRows] = useState<any[] | null>(null);
+  const [snaps, setSnaps] = useState<any[] | null>(null);
+  const [snapPlatform, setSnapPlatform] = useState<'whatsapp' | 'telegram'>('whatsapp');
+  const [snapDate, setSnapDate] = useState('');
+  const [snapMembers, setSnapMembers] = useState('');
+  const [snapEntries, setSnapEntries] = useState('');
+  const [snapExits, setSnapExits] = useState('');
   const [compare, setCompare] = useState(true);
   const [period, setPeriod] = useState<PeriodKey>('30d');
   const [custom, setCustom] = useState({ from: '', to: '' });
@@ -68,7 +74,7 @@ export default function ClienteDetalhe() {
 
   async function load() {
     if (!id) return; setLoading(true);
-    const [cRes, mRes, pmRes, campRes, sumRes, actRes, saleRes, qualRes] = await Promise.all([
+    const [cRes, mRes, pmRes, campRes, sumRes, actRes, saleRes, qualRes, snapRes] = await Promise.all([
       supabase.from('clients').select('*').eq('id', id).single(),
       supabase.from('performance_metrics').select('*').eq('client_id', id).gte('date', range.from).lte('date', range.to).order('date'),
       supabase.from('performance_metrics').select('*').eq('client_id', id).gte('date', prev.from).lte('date', prev.to).order('date'),
@@ -77,6 +83,7 @@ export default function ClienteDetalhe() {
       supabase.from('operation_actions').select('*').eq('client_id', id).order('created_at', { ascending: false }),
       supabase.from('sales_results').select('*').eq('client_id', id).gte('date', range.from).lte('date', range.to).order('date'),
       supabase.from('lead_quality').select('*').eq('client_id', id).gte('date', range.from).lte('date', range.to).order('date'),
+      supabase.from('group_snapshots').select('*').eq('client_id', id).gte('snapshot_date', range.from).lte('snapshot_date', range.to).order('snapshot_date', { ascending: false }),
     ]);
     if (cRes.error || mRes.error) { setErr((cRes.error || mRes.error)?.message ?? 'Erro ao carregar'); setLoading(false); return; }
     setClient(cRes.data);
@@ -90,6 +97,7 @@ export default function ClienteDetalhe() {
     if (actRes.error) setActions(null as any); else setActions(actRes.data ?? []);
     if (saleRes.error) setSalesRows(null); else setSalesRows(saleRes.data ?? []);
     if (qualRes.error) setQualityRows(null); else setQualityRows(qualRes.data ?? []);
+    if (snapRes.error) setSnaps(null); else setSnaps(snapRes.data ?? []);
     setErr(null); setLoading(false);
   }
   useEffect(() => { load(); }, [id, period, custom]);
@@ -111,6 +119,12 @@ export default function ClienteDetalhe() {
   const qInvalid = qualityRows ? qualityRows.reduce((a, r) => a + Number(r.invalid_leads ?? 0), 0) : null;
   const qDup = qualityRows ? qualityRows.reduce((a, r) => a + Number(r.duplicate_leads ?? 0), 0) : null;
   const qRet7 = qualityRows ? qualityRows.reduce((a, r) => a + Number(r.retained_7d ?? 0), 0) : null;
+
+  const snapEntriesTotal = snaps ? snaps.reduce((a, s) => a + Number(s.entries ?? 0), 0) : 0;
+  const snapExitsTotal = snaps ? snaps.reduce((a, s) => a + Number(s.exits ?? 0), 0) : 0;
+  const snapLatest = snaps && snaps.length ? [...snaps].sort((a, b) => new Date(b.snapshot_date).getTime() - new Date(a.snapshot_date).getTime())[0] : null;
+  const cprReal = snaps && snapEntriesTotal > 0 ? cur.invest / snapEntriesTotal : null;
+  const netEntries = snaps ? snapEntriesTotal - snapExitsTotal : null;
 
   const budgetLimit = client?.orcamento_diario != null ? Number(client.orcamento_diario) * days : null;
   const balance = budgetLimit != null ? budgetLimit - cur.invest : null;
@@ -141,6 +155,12 @@ export default function ClienteDetalhe() {
     if (error) alert(error.message); else { setActionText(''); setResp(''); setDeadline(''); load(); }
   }
   async function changeStatus(a: any, st: string) { await supabase.from('operation_actions').update({ status: st, updated_at: new Date().toISOString() }).eq('id', a.id); load(); }
+  async function saveSnap() {
+    if (!id || !snapDate || !snapMembers) { alert('Informe data e total atual.'); return; }
+    const { error } = await supabase.from('group_snapshots').upsert({ client_id: id, platform: snapPlatform, snapshot_date: snapDate, member_count: Number(snapMembers), entries: Number(snapEntries || 0), exits: Number(snapExits || 0), updated_at: new Date().toISOString() }, { onConflict: 'client_id,platform,snapshot_date' });
+    if (error) alert(error.message); else { setSnapMembers(''); setSnapEntries(''); setSnapExits(''); load(); }
+  }
+  async function removeSnap(s: any) { if (!confirm('Remover registro?')) return; await supabase.from('group_snapshots').delete().eq('id', s.id); load(); }
   async function syncMeta() {
     if (!id) return; if (!client?.ad_account_id) { setSyncMsg('Integração pendente: nenhuma conta de anúncios associada.'); return; }
     setSyncMsg('Sincronizando com Meta Ads...');
@@ -341,6 +361,41 @@ export default function ClienteDetalhe() {
               </tbody>
             </table>
           </div>
+        )}
+      </Card3D>
+
+      <Card3D>
+        <p className="text-sm font-bold text-slate-900">Grupos WhatsApp / Telegram — acompanhamento real</p>
+        <p className="text-xs text-muted">Registre 1x/dia o total atual, entradas e saídas observadas. CPR real = gasto / entradas reais. Participantes são contagens observadas, não conversões atribuídas.</p>
+        <div className="mt-3 grid gap-3 sm:grid-cols-4">
+          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Entradas no período</p><p className="font-bold">{snaps == null ? '— Tabela pendente' : num(snapEntriesTotal)}</p></div>
+          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Saídas</p><p className="font-bold">{snaps == null ? '—' : num(snapExitsTotal)}</p></div>
+          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">Saldo líquido</p><p className="font-bold">{snaps == null ? '—' : num(netEntries)}</p></div>
+          <div className="rounded-xl border border-border p-3"><p className="text-xs text-muted">CPR real</p><p className="font-bold">{cprReal != null ? brl(cprReal) : snaps == null ? 'Rode migração 003' : 'sem entradas'}</p></div>
+        </div>
+        {snaps == null ? (
+          <div className="mt-3 rounded-xl border border-dashed border-border p-4 text-sm text-muted">Rode a migração <code>003_grupos.sql</code> para ativar o acompanhamento de grupos.</div>
+        ) : (
+          <>
+            <div className="mt-3 grid gap-3 sm:grid-cols-5">
+              <label className="block"><span className="mb-1.5 block text-xs font-semibold text-slate-600">Plataforma</span><select value={snapPlatform} onChange={e => setSnapPlatform(e.target.value as any)} className="w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm"><option value="whatsapp">WhatsApp</option><option value="telegram">Telegram</option></select></label>
+              <Input label="Data" type="date" value={snapDate} onChange={(e: any) => setSnapDate(e.target.value)} />
+              <Input label="Total atual" type="number" value={snapMembers} onChange={(e: any) => setSnapMembers(e.target.value)} />
+              <Input label="Entradas" type="number" value={snapEntries} onChange={(e: any) => setSnapEntries(e.target.value)} />
+              <Input label="Saídas" type="number" value={snapExits} onChange={(e: any) => setSnapExits(e.target.value)} />
+            </div>
+            <Primary className="mt-3" onClick={saveSnap}>Registrar snapshot</Primary>
+            {snaps.length ? (
+              <div className="mt-3 divide-y divide-border">
+                {snaps.map((s: any) => (
+                  <div key={s.id} className="flex flex-wrap items-center justify-between gap-2 py-2 text-sm">
+                    <span>{dateBR(s.snapshot_date)} • {s.platform} • membros {num(s.member_count)} • +{num(s.entries)} / -{num(s.exits)}</span>
+                    <Btn onClick={() => removeSnap(s)} className="px-2 py-1 text-xs">Remover</Btn>
+                  </div>
+                ))}
+              </div>
+            ) : <p className="mt-3 text-sm text-muted">Nenhum snapshot no período.</p>}
+          </>
         )}
       </Card3D>
 
