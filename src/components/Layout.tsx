@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, KeyRound, Cable, FileText, LogOut, TrendingUp, Library } from 'lucide-react';
+import { LayoutDashboard, Users, KeyRound, Cable, FileText, LogOut, TrendingUp } from 'lucide-react';
 import { useAuth } from '@/lib/auth';
 import { cn } from '@/lib/utils';
 
@@ -9,13 +9,12 @@ const gestLinks = [
   { to: '/gestor/acessos', label: 'Acessos', icon: KeyRound },
   { to: '/gestor/integracao', label: 'Meta Ads', icon: Cable },
   { to: '/gestor/relatorios', label: 'Relatórios', icon: FileText },
-  { to: '/gestor/biblioteca', label: 'Biblioteca de criativos', icon: Library },
 ];
 
 export default function Layout() {
   const loc = useLocation();
   const { role, user, signOut } = useAuth();
-  const links = role === 'cliente' ? [{ to: '/painel', label: 'Meu Painel', icon: LayoutDashboard }, { to: '/painel/biblioteca', label: 'Biblioteca de criativos', icon: Library }] : gestLinks;
+  const links = role === 'cliente' ? [{ to: '/painel', label: 'Meu Painel', icon: LayoutDashboard }] : gestLinks;
   const active = (to: string) => loc.pathname === to || (to !== '/gestor' && loc.pathname.startsWith(to));
 
   return (

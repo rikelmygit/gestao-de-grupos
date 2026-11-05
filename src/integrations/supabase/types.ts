@@ -258,6 +258,7 @@ export type Database = {
           created_at: string
           email: string | null
           id: string
+          logo_url: string | null
           meta_cpl: number | null
           nicho: string | null
           nome_negocio: string
@@ -273,6 +274,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          logo_url?: string | null
           meta_cpl?: number | null
           nicho?: string | null
           nome_negocio: string
@@ -288,6 +290,7 @@ export type Database = {
           created_at?: string
           email?: string | null
           id?: string
+          logo_url?: string | null
           meta_cpl?: number | null
           nicho?: string | null
           nome_negocio?: string
@@ -299,6 +302,151 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      group_snapshots: {
+        Row: {
+          client_id: string
+          created_at: string
+          entries: number | null
+          exits: number | null
+          id: string
+          member_count: number | null
+          notes: string | null
+          platform: string
+          snapshot_date: string
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          entries?: number | null
+          exits?: number | null
+          id?: string
+          member_count?: number | null
+          notes?: string | null
+          platform: string
+          snapshot_date: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          entries?: number | null
+          exits?: number | null
+          id?: string
+          member_count?: number | null
+          notes?: string | null
+          platform?: string
+          snapshot_date?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_snapshots_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lead_quality: {
+        Row: {
+          client_id: string
+          created_at: string
+          date: string
+          duplicate_leads: number | null
+          id: string
+          invalid_leads: number | null
+          retained_30d: number | null
+          retained_7d: number | null
+          updated_at: string
+          valid_leads: number | null
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          date: string
+          duplicate_leads?: number | null
+          id?: string
+          invalid_leads?: number | null
+          retained_30d?: number | null
+          retained_7d?: number | null
+          updated_at?: string
+          valid_leads?: number | null
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          date?: string
+          duplicate_leads?: number | null
+          id?: string
+          invalid_leads?: number | null
+          retained_30d?: number | null
+          retained_7d?: number | null
+          updated_at?: string
+          valid_leads?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_quality_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      operation_actions: {
+        Row: {
+          action: string
+          campaign_id: string | null
+          client_id: string
+          created_at: string
+          deadline: string | null
+          id: string
+          responsible: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          action: string
+          campaign_id?: string | null
+          client_id: string
+          created_at?: string
+          deadline?: string | null
+          id?: string
+          responsible?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          action?: string
+          campaign_id?: string | null
+          client_id?: string
+          created_at?: string
+          deadline?: string | null
+          id?: string
+          responsible?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "operation_actions_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "operation_actions_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       operation_summaries: {
         Row: {
@@ -375,6 +523,44 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "performance_metrics_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sales_results: {
+        Row: {
+          client_id: string
+          created_at: string
+          date: string
+          id: string
+          revenue: number | null
+          sales: number | null
+          updated_at: string
+        }
+        Insert: {
+          client_id: string
+          created_at?: string
+          date: string
+          id?: string
+          revenue?: number | null
+          sales?: number | null
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string
+          created_at?: string
+          date?: string
+          id?: string
+          revenue?: number | null
+          sales?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sales_results_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
             referencedRelation: "clients"
