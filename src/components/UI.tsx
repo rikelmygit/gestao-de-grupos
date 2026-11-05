@@ -2,7 +2,12 @@ import { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 export function Card({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn('rounded-2xl border border-border bg-surface p-5 shadow-card', className)}>{children}</div>;
+  return (
+    <div className={cn('relative overflow-hidden rounded-[20px] border border-white/60 bg-white/80 p-5 shadow-[0_20px_50px_-20px_rgba(37,99,235,0.25),inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-xl transition hover:-translate-y-0.5', className)}>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-50/60 via-transparent to-violet-50/40" />
+      <div className="relative">{children}</div>
+    </div>
+  );
 }
 export function Empty({ title, desc }: { title: string; desc: string }) {
   return <div className="rounded-2xl border border-dashed border-border bg-surface p-10 text-center"><p className="font-semibold text-slate-900">{title}</p><p className="mt-1 text-sm text-muted">{desc}</p></div>;

@@ -36,13 +36,13 @@ export default function GestorDashboard() {
   const above = clients.filter(c => { const v = byClient.get(c.id); if (!v || v.leads === 0 || c.meta_cpl == null) return false; return v.invest / v.leads > Number(c.meta_cpl); }).length;
 
   const cards = [
-    { k: 'Clientes ativos', v: num(active.length), icon: Users, tone: 'bg-blue-50 text-blue-600' },
-    { k: 'Investimento total', v: brl(totalInvest), icon: DollarSign, tone: 'bg-emerald-50 text-emerald-600' },
-    { k: 'Leads gerados', v: num(totalLeads), icon: ShoppingBag, tone: 'bg-violet-50 text-violet-600' },
-    { k: 'CPL médio', v: brl(avgCpl), icon: Target, tone: 'bg-amber-50 text-amber-600' },
-    { k: 'Orçamento diário', v: brl(dailyBudget), icon: CalendarDays, tone: 'bg-sky-50 text-sky-600' },
-    { k: 'Dentro da meta', v: num(inside), icon: CheckCircle2, tone: 'bg-emerald-50 text-emerald-600' },
-    { k: 'Acima da meta', v: num(above), icon: AlertCircle, tone: 'bg-red-50 text-red-600' },
+    { k: 'Clientes ativos', v: num(active.length), icon: Users, tone: 'from-blue-500 to-blue-600 text-white shadow-blue-500/30' },
+    { k: 'Investimento total', v: brl(totalInvest), icon: DollarSign, tone: 'from-emerald-500 to-emerald-600 text-white shadow-emerald-500/30' },
+    { k: 'Leads gerados', v: num(totalLeads), icon: ShoppingBag, tone: 'from-violet-500 to-purple-600 text-white shadow-violet-500/30' },
+    { k: 'CPL médio', v: brl(avgCpl), icon: Target, tone: 'from-amber-500 to-orange-500 text-white shadow-amber-500/30' },
+    { k: 'Orçamento diário', v: brl(dailyBudget), icon: CalendarDays, tone: 'from-sky-500 to-cyan-500 text-white shadow-sky-500/30' },
+    { k: 'Dentro da meta', v: num(inside), icon: CheckCircle2, tone: 'from-emerald-500 to-teal-500 text-white shadow-emerald-500/30' },
+    { k: 'Acima da meta', v: num(above), icon: AlertCircle, tone: 'from-rose-500 to-red-500 text-white shadow-rose-500/30' },
   ];
 
   if (loading) return <Loading />;
@@ -51,17 +51,21 @@ export default function GestorDashboard() {
 
   return (
     <div className="space-y-5">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div><h1 className="text-xl font-bold tracking-tight text-slate-900">Visão Geral do Gestor</h1><p className="text-sm text-muted">Todos os indicadores são calculados de dados reais do período selecionado.</p></div>
-        <select value={period} onChange={e => setPeriod(e.target.value as PeriodKey)} className="rounded-xl border border-border bg-white px-3 py-2.5 text-sm font-medium shadow-sm"><option value="hoje">Hoje</option><option value="ontem">Ontem</option><option value="7d">Últimos 7 dias</option><option value="15d">Últimos 15 dias</option><option value="30d">Últimos 30 dias</option><option value="mes">Este mês</option></select>
+      <div className="relative overflow-hidden rounded-[22px] border border-white/60 bg-gradient-to-r from-blue-600 via-blue-500 to-violet-600 p-[1px] shadow-[0_20px_50px_-20px_rgba(37,99,235,0.45)]">
+        <div className="rounded-[21px] bg-white/95 p-5 backdrop-blur">
+          <div className="flex flex-wrap items-start justify-between gap-3">
+            <div><h1 className="bg-gradient-to-r from-blue-700 to-violet-600 bg-clip-text text-xl font-extrabold tracking-tight text-transparent">Visão Geral do Gestor</h1><p className="text-sm text-muted">Todos os indicadores são calculados de dados reais do período selecionado.</p></div>
+            <select value={period} onChange={e => setPeriod(e.target.value as PeriodKey)} className="rounded-xl border border-border bg-white px-3 py-2.5 text-sm font-medium shadow-sm"><option value="hoje">Hoje</option><option value="ontem">Ontem</option><option value="7d">Últimos 7 dias</option><option value="15d">Últimos 15 dias</option><option value="30d">Últimos 30 dias</option><option value="mes">Este mês</option></select>
+          </div>
+        </div>
       </div>
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {cards.map(c => (
           <Card key={c.k} className="p-4">
             <div className="flex items-center gap-3">
-              <div className={`flex h-10 w-10 items-center justify-center rounded-xl ${c.tone}`}><c.icon size={18} /></div>
-              <div><p className="text-xs font-medium text-muted">{c.k}</p><p className="text-lg font-bold tracking-tight text-slate-900">{c.v}</p></div>
+              <div className={`flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br shadow-lg ${c.tone}`}><c.icon size={18} /></div>
+              <div><p className="text-xs font-medium text-muted">{c.k}</p><p className="text-lg font-extrabold tracking-tight text-slate-900">{c.v}</p></div>
             </div>
           </Card>
         ))}
