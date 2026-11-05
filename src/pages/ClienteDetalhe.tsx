@@ -322,26 +322,46 @@ export default function ClienteDetalhe() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         <Card3D className="lg:col-span-2">
-          <div className="mb-1 flex items-center justify-between"><p className="text-sm font-bold text-slate-900">Crescimento de leads</p><span className="flex items-center gap-1.5 text-xs text-muted"><span className="h-2 w-2 rounded-full bg-blue-600" />Novos leads</span></div>
-          <div className="h-56">
+          <div className="mb-2 flex items-center justify-between"><p className="text-sm font-bold text-slate-900">Crescimento de leads</p><span className="flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-1 text-xs font-semibold text-blue-700"><span className="h-2 w-2 rounded-full bg-blue-600" />Novos leads</span></div>
+          <div className="h-64">
             <ResponsiveContainer>
               <AreaChart data={chartData}>
                 <defs>
                   <linearGradient id="gradArea" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="#3B82F6" stopOpacity={0.02} />
+                    <stop offset="60%" stopColor="#60A5FA" stopOpacity={0.12} />
+                    <stop offset="100%" stopColor="#60A5FA" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid stroke="#E2E8F0" strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} />
-                <YAxis tick={{ fill: '#64748B', fontSize: 11 }} />
-                <Tooltip contentStyle={tipStyle} />
-                <Area type="monotone" dataKey="Leads" stroke="#2563EB" strokeWidth={3} fill="url(#gradArea)" />
+                <CartesianGrid stroke="#E2E8F0" strokeDasharray="4 4" vertical={false} />
+                <XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={tipStyle} cursor={{ stroke: '#2563EB', strokeOpacity: 0.15 }} />
+                <Area type="monotone" dataKey="Leads" stroke="#2563EB" strokeWidth={3} fill="url(#gradArea)" dot={{ r: 5, fill: '#2563EB', stroke: '#fff', strokeWidth: 2 }} activeDot={{ r: 7, fill: '#2563EB', stroke: '#fff', strokeWidth: 2 }} />
               </AreaChart>
             </ResponsiveContainer>
           </div>
         </Card3D>
-        <Card3D><p className="text-sm font-bold text-slate-900">Evolução do CPL</p><div className="h-56"><ResponsiveContainer><LineChart data={chartData}><CartesianGrid stroke="#E2E8F0" strokeDasharray="3 3" vertical={false} /><XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} /><YAxis tick={{ fill: '#64748B', fontSize: 11 }} /><Tooltip contentStyle={tipStyle} /><Line type="monotone" dataKey="CPL" stroke="#F59E0B" strokeWidth={3} dot={{ r: 3, fill: '#F59E0B' }} /></LineChart></ResponsiveContainer></div></Card3D>
+        <Card3D>
+          <p className="mb-2 text-sm font-bold text-slate-900">Evolução do CPL</p>
+          <div className="h-64">
+            <ResponsiveContainer>
+              <LineChart data={chartData}>
+                <defs>
+                  <linearGradient id="gradCpl" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#F59E0B" stopOpacity={0.25} />
+                    <stop offset="100%" stopColor="#F59E0B" stopOpacity={0.02} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid stroke="#E2E8F0" strokeDasharray="4 4" vertical={false} />
+                <XAxis dataKey="date" tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fill: '#64748B', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <Tooltip contentStyle={tipStyle} cursor={{ stroke: '#F59E0B', strokeOpacity: 0.15 }} />
+                <Line type="monotone" dataKey="CPL" stroke="#F59E0B" strokeWidth={3} dot={{ r: 5, fill: '#F59E0B', stroke: '#fff', strokeWidth: 2 }} activeDot={{ r: 7, fill: '#F59E0B', stroke: '#fff', strokeWidth: 2 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </Card3D>
       </div>
 
       <Card3D className="p-0 overflow-hidden">
