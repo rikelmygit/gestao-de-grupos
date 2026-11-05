@@ -89,7 +89,7 @@ export default function Clientes() {
                   )}
                 </td>
               </tr>
-            )}</tbody></table></div>
+            ))}</tbody></table></div>
         </Card>
       )}
 
