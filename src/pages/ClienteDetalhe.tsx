@@ -227,8 +227,7 @@ export default function ClienteDetalhe() {
         <Card3D className="p-4"><div className="flex items-center gap-3"><div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-sky-500 to-cyan-500 text-white shadow-md shadow-sky-500/30"><Target size={20} /></div><div><p className="text-xs font-semibold text-slate-500">Meta de CPL</p><p className="text-xl font-extrabold leading-none text-slate-900">{brl(meta)}</p></div></div></Card3D>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card3D>
+      <Card3D>
           <div className="mb-1 flex items-center justify-between"><div><p className="text-lg font-extrabold tracking-tight text-slate-900">Evolução do investimento</p><p className="text-xs text-muted">Gastos por dia, sem projeção. Até 30 barras.</p></div><span className="flex items-center gap-1.5 text-xs text-muted"><span className="h-2 w-2 rounded-full bg-blue-600" />Gasto</span></div>
           <div className="h-56">
             <ResponsiveContainer>
@@ -253,19 +252,6 @@ export default function ClienteDetalhe() {
           </div>
           <p className="text-xs text-muted">Somente dias com registro. Passe sobre as barras para ver valores.</p>
         </Card3D>
-
-        <Card3D>
-          <p className="text-xs tracking-[0.12em] uppercase text-muted">O que estamos acompanhando</p>
-          <p className="text-lg font-extrabold tracking-tight text-slate-900">Resumo do gestor</p>
-          <div className="mt-3 rounded-xl border-l-4 border-blue-600 bg-blue-50/70 p-3 text-sm">{summaries[0]?.content ?? 'A equipe ainda não publicou uma atualização para esta campanha.'}</div>
-          <p className="mt-2 text-xs text-muted">Cadastro atualizado em {dateBR(client.updated_at)}. Os números seguem a fonte indicada, não são leitura em tempo real.</p>
-          <div className="mt-4 rounded-xl border border-border p-3 text-sm">
-            <p className="font-semibold">Grupos desta campanha</p>
-            <p className="text-muted text-xs mt-1">O cliente ainda não vinculou grupos a esta campanha. Participantes são contagens observadas, não conversões atribuídas.</p>
-            <Btn className="mt-2"><Users size={14} /> Conectar e selecionar meus grupos ↗</Btn>
-          </div>
-        </Card3D>
-      </div>
 
       <Card3D>
         <p className="text-lg font-extrabold tracking-tight text-slate-900">Funil: do clique à conversão</p>
@@ -376,8 +362,8 @@ export default function ClienteDetalhe() {
       <Card3D className="p-0 overflow-hidden">
         <div className="px-5 py-4"><p className="text-lg font-extrabold tracking-tight text-slate-900">Campanhas</p></div>
         {!campaigns.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhuma campanha sincronizada.</p></div> : (
-          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Impressões</th><th>Alcance</th><th>Cliques</th></tr></thead><tbody>
-            {campaigns.map(c => <tr key={c.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{c.name}</td><td>{c.status ?? '—'}</td><td>{brl(c.spend)}</td><td>{num(c.leads)}</td><td className="font-medium">{brl(c.cpl)}</td><td>{num(c.impressions)}</td><td>{num(c.reach)}</td><td>{num(c.clicks)}</td></tr>)}
+          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Impressões</th><th>Alcance</th><th>Cliques</th><th>Leads</th><th>CPL</th><th>Investido</th></tr></thead><tbody>
+            {campaigns.map(c => <tr key={c.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{c.name}</td><td>{c.status ?? '—'}</td><td>{num(c.impressions)}</td><td>{num(c.reach)}</td><td>{num(c.clicks)}</td><td>{num(c.leads)}</td><td className="font-medium">{brl(c.cpl)}</td><td>{brl(c.spend)}</td></tr>)}
           </tbody></table></div>
         )}
       </Card3D>
@@ -385,8 +371,8 @@ export default function ClienteDetalhe() {
       <Card3D className="p-0 overflow-hidden">
         <div className="px-5 py-4"><p className="text-lg font-extrabold tracking-tight text-slate-900">Conjuntos de anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ad_sets</code>. Sem dados = mensagens vazia, sem mock.</p></div>
         {!adSets.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhum conjunto vinculado ainda. Após a sincronização com a Meta, os conjuntos aparecem aqui.</p></div> : (
-          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Campanha</th></tr></thead><tbody>
-            {adSets.map(s => <tr key={s.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{s.name}</td><td>{s.status ?? '—'}</td><td>{brl(s.spend)}</td><td>{num(s.leads)}</td><td className="font-medium">{brl(s.cpl)}</td><td className="text-xs text-muted">{s.campaign_external_id ?? '—'}</td></tr>)}
+          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Nome</th><th>Status</th><th>Impressões</th><th>Alcance</th><th>Cliques</th><th>Leads</th><th>CPL</th><th>Investido</th><th>Campanha</th></tr></thead><tbody>
+            {adSets.map(s => <tr key={s.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{s.name}</td><td>{s.status ?? '—'}</td><td>{num(s.impressions)}</td><td>{num(s.reach)}</td><td>{num(s.clicks)}</td><td>{num(s.leads)}</td><td className="font-medium">{brl(s.cpl)}</td><td>{brl(s.spend)}</td><td className="text-xs text-muted">{s.campaign_external_id ?? '—'}</td></tr>)}
           </tbody></table></div>
         )}
       </Card3D>
@@ -394,8 +380,8 @@ export default function ClienteDetalhe() {
       <Card3D className="p-0 overflow-hidden">
         <div className="px-5 py-4"><p className="text-lg font-extrabold tracking-tight text-slate-900">Anúncios vinculados</p><p className="text-xs text-muted">Dados reais de <code>ads</code>. Sem dados = mensagens vazia, sem mock.</p></div>
         {!ads.length ? <div className="px-5 pb-5"><p className="text-sm text-muted">Nenhum anúncio vinculado ainda.</p></div> : (
-          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Anúncio</th><th>Criativo</th><th>Investimento</th><th>Leads</th><th>CPL</th><th>Impressões</th><th>Cliques</th></tr></thead><tbody>
-            {ads.map(a => <tr key={a.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{a.name}</td><td>{a.creative_id ?? '—'}</td><td>{brl(a.spend)}</td><td>{num(a.leads)}</td><td className="font-medium">{brl(a.cpl)}</td><td>{num(a.impressions)}</td><td>{num(a.clicks)}</td></tr>)}
+          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-y border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Anúncio</th><th>Criativo</th><th>Impressões</th><th>Alcance</th><th>Cliques</th><th>Leads</th><th>CPL</th><th>Investido</th></tr></thead><tbody>
+            {ads.map(a => <tr key={a.id} className="border-b border-border hover:bg-blue-50/50"><td className="px-5 py-3 font-medium text-slate-900">{a.name}</td><td>{a.creative_id ?? '—'}</td><td>{num(a.impressions)}</td><td>{num(a.reach)}</td><td>{num(a.clicks)}</td><td>{num(a.leads)}</td><td className="font-medium">{brl(a.cpl)}</td><td>{brl(a.spend)}</td></tr>)}
           </tbody></table></div>
         )}
       </Card3D>
