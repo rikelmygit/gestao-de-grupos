@@ -270,37 +270,28 @@ export default function ClienteDetalhe() {
             { label: 'Entradas no grupo', value: null as any, grad: 'from-violet-500 to-purple-500', note: 'Não disponível — requer registro/integração' },
           ];
           return (
-            <div className="mt-6 flex flex-col items-center">
+            <div className="mt-4 space-y-3">
               {steps.map((s, i) => {
-                const w = s.value == null ? 72 : Math.max(16, (s.value / max) * 100);
                 const isPending = s.value == null;
-                const n = steps.length;
-                const topInset = i === 0 ? 2 : 4;
-                const bottomInset = i === n - 1 ? 42 : 4;
+                const raw = s.value == null ? 0 : s.value;
+                const w = isPending ? 100 : Math.max(22, Math.sqrt(raw / max) * 100);
                 return (
-                  <div key={s.label} className="flex flex-col items-center">
-                    <div
-                      className={isPending
-                        ? 'flex h-12 items-center justify-center border border-dashed border-slate-300 bg-slate-100 text-slate-500 shadow-inner'
-                        : 'flex h-12 items-center justify-center font-semibold text-white shadow-[inset_0_2px_6px_rgba(255,255,255,0.5),inset_0_-8px_16px_rgba(0,60,140,0.35),0_4px_12px_rgba(2,132,199,0.35)]'}
-                      style={{
-                        width: w + '%',
-                        background: isPending ? undefined : [
-                          'linear-gradient(to bottom, #7DD3FC 0%, #38BDF8 45%, #0284C7 100%)',
-                          'linear-gradient(to bottom, #38BDF8 0%, #0EA5E9 55%, #0369A1 100%)',
-                          'linear-gradient(to bottom, #0EA5E9 0%, #0284C7 55%, #075985 100%)',
-                          'linear-gradient(to bottom, #0284C7 0%, #0369A1 55%, #0C4A6E 100%)',
-                          'linear-gradient(to bottom, #0369A1 0%, #075985 100%)',
-                        ][Math.min(i, 4)],
-                        clipPath: `polygon(${topInset}% 0, ${100 - topInset}% 0, ${100 - bottomInset}% 100%, ${bottomInset}% 100%)`,
-                      }}
-                    >
-                      <span className="px-4 text-xs font-bold tracking-wide drop-shadow sm:text-sm">
-                        {s.label} • {isPending ? '—' : num(s.value)}
-                      </span>
+                  <div key={s.label} className="flex items-center gap-3">
+                    <div className="w-32 shrink-0 text-right">
+                      <p className="text-xs font-semibold text-slate-700">{s.label}</p>
+                      <p className="text-xs text-muted">{s.note}</p>
                     </div>
-                    {i < steps.length - 1 && <div className="h-[3px] w-full bg-slate-50" style={{ width: w * 0.85 + '%' }} />}
-                    <p className="mt-0.5 text-xs text-muted">{s.note}</p>
+                    <div className="flex-1">
+                      <div className={isPending ? 'flex h-10 items-center rounded-xl border border-dashed border-slate-300 bg-slate-100 px-4' : 'flex h-10 items-center rounded-xl bg-gradient-to-r px-4 shadow-md'} style={{ width: w + '%', background: isPending ? undefined : [
+                        'linear-gradient(90deg,#38BDF8,#0284C7)',
+                        'linear-gradient(90deg,#0EA5E9,#0369A1)',
+                        'linear-gradient(90deg,#0284C7,#1D4ED8)',
+                        'linear-gradient(90deg,#1D4ED8,#7C3AED)',
+                        'linear-gradient(90deg,#7C3AED,#A855F7)',
+                      ][Math.min(i, 4)] }}>
+                        <span className={isPending ? 'text-xs text-slate-500' : 'text-sm font-bold text-white'}>{isPending ? '—' : num(s.value)}</span>
+                      </div>
+                    </div>
                   </div>
                 );
               })}
