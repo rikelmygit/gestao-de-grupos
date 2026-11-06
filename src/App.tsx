@@ -26,6 +26,7 @@ function HomeRedirect() {
   if (!user) return <Navigate to="/login" replace />;
   if (role === 'gestor') return <Navigate to="/gestor" replace />;
   if (role === 'cliente' && clientIds.length) return <Navigate to={`/painel/${clientIds[0]}`} replace />;
+  if (role === 'cliente') return <Navigate to="/painel/sem-acesso" replace />;
   return <Navigate to="/gestor" replace />;
 }
 
