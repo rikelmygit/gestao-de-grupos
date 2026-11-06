@@ -28,8 +28,8 @@ export default function Login() {
         <h1 className="text-lg font-semibold">Gestão de Grupos</h1>
         <p className="text-sm text-muted">Acesse sua operação.</p>
         <form onSubmit={submit} className="mt-4 space-y-3">
-          <label className="block text-sm"><span className="mb-1 block text-xs text-muted">E-mail</span><input required value={email} onChange={e => setEmail(e.target.value)} className="w-full rounded-lg border border-border bg-zinc-900 px-3 py-2" placeholder="voce@exemplo.com" /></label>
-          <label className="block text-sm"><span className="mb-1 block text-xs text-muted">Senha</span><input required type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full rounded-lg border border-border bg-zinc-900 px-3 py-2" /></label>
+          <label className="block text-sm"><span className="mb-1 block text-xs text-muted">E-mail</span><input required value={email} onChange={e => setEmail(e.target.value)} className="w-full rounded-lg border border-border bg-white text-slate-900 [color-scheme:light] px-3 py-2" placeholder="voce@exemplo.com" /></label>
+          <label className="block text-sm"><span className="mb-1 block text-xs text-muted">Senha</span><input required type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full rounded-lg border border-border bg-white text-slate-900 [color-scheme:light] px-3 py-2" /></label>
           {err && <p className="text-sm text-red-400">{err}</p>}
           <Btn disabled={busy} className="w-full justify-center bg-emerald-600 text-white">{busy ? 'Entrando...' : 'Entrar'}</Btn>
           <p className="text-center text-xs text-muted">Esqueceu a senha? Use a opção de recuperação do email.</p>
