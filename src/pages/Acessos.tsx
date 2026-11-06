@@ -22,11 +22,18 @@ export default function Acessos() {
 
   async function create() {
     if (!email.trim() || !password.trim() || !clientId) { alert('Preencha e-mail, senha e cliente.'); return; }
-    const { data, error } = await supabase.auth.signUp({ email: email.trim(), password });
-    if (error || !data.user) { alert(error?.message ?? 'Não foi possível criar usuário.'); return; }
-    await supabase.from('user_roles').insert({ user_id: data.user.id, role });
-    await supabase.from('client_users').insert({ user_id: data.user.id, client_id: clientId, is_active: true });
-    setEmail(''); setPassword(''); load(); alert('Usuário criado. Envie o link de confirmação/convite ao cliente.');
+    const { data: sess } = await supabase.auth.getSession();
+    const edgeBase = (import.meta.env.VITE_SUPABASE_EDGE_FUNCTION_URL as string | undefined)
+      ? `${import.meta.env.VITE_SUPABASE_EDGE_FUNCTION_URL}/create-access`
+      : `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/create-access`;
+    const res = await fetch(edgeBase, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string, Authorization: `Bearer ${sess.session?.access_token}` },
+      body: JSON.stringify({ email: email.trim(), password, client_id: clientId, role }),
+    });
+    const j = await res.json().catch(() => ({}));
+    if (!res.ok) { alert(j.error ?? 'Não foi possível criar usuário.'); return; }
+    setEmail(''); setPassword(''); load(); alert('Usuário criado e vinculado. Envie e-mail/senha ao cliente.');
   }
 
   async function toggleLink(l: any) { await supabase.from('client_users').update({ is_active: !l.is_active }).eq('id', l.id); load(); }
