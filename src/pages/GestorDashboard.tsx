@@ -21,7 +21,7 @@ export default function GestorDashboard() {
       supabase.from('performance_metrics').select('*').gte('date', range.from).lte('date', range.to),
     ]);
     if (e1 || e2) { setErr((e1 || e2)?.message ?? 'Erro'); setLoading(false); return; }
-    setClients((c ?? []) as Client[]); setMetrics((m ?? []) as Metric[]); setLoading(false);
+    setClients((c ?? []) as Client[]); setMetrics(m ?? []); setLoading(false);
   }
   useEffect(() => { load(); }, [period]);
 
