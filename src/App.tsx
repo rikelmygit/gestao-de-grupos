@@ -16,7 +16,11 @@ function Gate({ children, roles }: { children: JSX.Element; roles: string[] }) {
   const { user, role, loading, clientIds } = useAuth();
   if (loading) return <div className="p-6"><Loading /></div>;
   if (!user) return <Navigate to="/login" replace />;
-  if (!roles.includes(role ?? '')) return <div className="p-6"><Empty title="Sem permissão" desc={`Sua função (${role ?? 'não definida'}) não tem acesso. Fale com o gestor.`} /></div>;
+  if (!roles.includes(role ?? '')) {
+    if (role === 'cliente' && clientIds.length) return <Navigate to={`/painel/${clientIds[0]}`} replace />;
+    if (role === 'cliente') return <Navigate to="/painel/sem-acesso" replace />;
+    return <Navigate to="/gestor" replace />;
+  }
   return children;
 }
 
