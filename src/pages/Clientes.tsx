@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Card, Empty, ErrorBox, Loading, Badge, Btn, Primary, Input } from '@/components/UI';
 import { dateBR } from '@/lib/format';
 import type { Client } from '@/types/database';
+import { MoreVertical, Pencil, Ban, Trash2, Eye } from 'lucide-react';
 
 const emptyForm = { nome_negocio: '', nome_responsavel: '', telefone: '', email: '', nicho: '', status: 'ativo' as const, orcamento_diario: '', meta_cpl: '', ad_account_id: '', resumo_operacao: '' };
 
@@ -11,8 +12,9 @@ export default function Clientes() {
   const [list, setList] = useState<Client[]>([]); const [q, setQ] = useState(''); const [status, setStatus] = useState('all');
   const [loading, setLoading] = useState(true); const [err, setErr] = useState<string | null>(null);
   const [show, setShow] = useState(false); const [form, setForm] = useState(emptyForm); const [editing, setEditing] = useState<string | null>(null); const [saving, setSaving] = useState(false);
+  const [openMenu, setOpenMenu] = useState<string | null>(null);
 
-  async function load() { setLoading(true); const { data, error } = await supabase.from('clients').select('*').order('nome_negocio'); if (error) setErr(error.message); else { setList(data ?? []); setErr(null); } setLoading(false); }
+  async function load() { setLoading(true); const { data, error } = await supabase.from('clients').select('*').order('nome_negocio'); if (error) setErr(error.message); else { setList((data ?? []) as Client[]); setErr(null); } setLoading(false); }
   useEffect(() => { load(); }, []);
 
   const filtered = list.filter(c => (status === 'all' || c.status === status) && c.nome_negocio.toLowerCase().includes(q.toLowerCase()));
@@ -46,20 +48,48 @@ export default function Clientes() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-xl font-semibold">Clientes</h1>
-        <Primary onClick={() => { setEditing(null); setForm(emptyForm); setShow(true); }}>Novo cliente</Primary>
+      <div className="relative overflow-hidden rounded-[24px] bg-white shadow-[0_24px_60px_-20px_rgba(37,99,235,0.35)] ring-1 ring-slate-200">
+        <div className="h-1.5 bg-gradient-to-r from-blue-600 via-sky-500 to-violet-600" />
+        <div className="flex flex-wrap items-center justify-between gap-3 p-5">
+          <div><h1 className="text-2xl font-extrabold tracking-tight text-slate-900">Clientes</h1><p className="text-sm text-muted">Gerencie as operações dos seus clientes</p></div>
+          <Primary onClick={() => { setEditing(null); setForm(emptyForm); setShow(true); }}>Novo cliente</Primary>
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar por nome..." className="rounded-lg border border-border bg-zinc-900 px-3 py-2 text-sm" />
-        <select value={status} onChange={e => setStatus(e.target.value)} className="rounded-lg border border-border bg-zinc-900 px-3 py-2 text-sm"><option value="all">Todos statuses</option><option>ativo</option><option>pausado</option><option>desativado</option><option>pendente</option></select>
+        <input value={q} onChange={e => setQ(e.target.value)} placeholder="Buscar por nome..." className="rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none [color-scheme:light]" />
+        <select value={status} onChange={e => setStatus(e.target.value)} className="rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm outline-none [color-scheme:light]"><option value="all">Todos statuses</option><option>ativo</option><option>pausado</option><option>desativado</option><option>pendente</option></select>
       </div>
 
       {!filtered.length ? <Empty title="Nenhum cliente encontrado" desc="Ajuste a busca ou cadastre um novo cliente." /> : (
-        <Card>
-          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="text-left text-xs text-muted"><th>Cliente</th><th>Responsável</th><th>Status</th><th>Orçamento/dia</th><th>Meta CPL</th><th>Cadastro</th><th>Ações</th></tr></thead>
-            <tbody>{filtered.map(c => <tr key={c.id} className="border-t border-border"><td className="py-2 font-medium"><Link to={`/gestor/clientes/${c.id}`} className="hover:underline">{c.nome_negocio}</Link><div className="text-xs text-muted">{c.email}</div></td><td>{c.nome_responsavel ?? '—'}</td><td><Badge tone={c.status === 'ativo' ? 'ok' : c.status === 'desativado' ? 'bad' : 'muted'}>{c.status}</Badge></td><td>{c.orcamento_diario ? `R$ ${c.orcamento_diario}` : '—'}</td><td>{c.meta_cpl ? `R$ ${c.meta_cpl}` : '—'}</td><td>{dateBR(c.created_at)}</td><td><div className="flex gap-2"><Btn onClick={() => edit(c)}>Editar</Btn><Btn onClick={() => toggleStatus(c)}>{c.status === 'desativado' ? 'Ativar' : 'Desativar'}</Btn><Btn onClick={() => remove(c)}>Remover</Btn></div></td></tr>)}</tbody></table></div>
+        <Card className="p-0">
+          <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-b border-border bg-slate-50 text-left text-xs font-semibold tracking-wide text-muted uppercase"><th className="px-5 py-3">Cliente</th><th>Responsável</th><th>Status</th><th>Orçamento/dia</th><th>Meta CPL</th><th>Cadastro</th><th className="w-10"></th></tr></thead>
+            <tbody>{filtered.map(c => (
+              <tr key={c.id} className="border-b border-border hover:bg-blue-50/50">
+                <td className="px-5 py-3">
+                  <div className="flex items-center gap-3">
+                    {(c as any).logo_url ? <img src={(c as any).logo_url} className="h-9 w-9 rounded-xl object-cover" alt="" /> : <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-violet-600 text-sm font-extrabold text-white">{c.nome_negocio.slice(0, 1).toUpperCase()}</div>}
+                    <div><Link to={`/gestor/clientes/${c.id}`} className="font-bold text-slate-900 hover:underline">{c.nome_negocio}</Link><div className="text-xs text-muted">{c.email}</div></div>
+                  </div>
+                </td>
+                <td className="text-slate-700">{c.nome_responsavel ?? '—'}</td>
+                <td><Badge tone={c.status === 'ativo' ? 'ok' : c.status === 'desativado' ? 'bad' : 'muted'}>{c.status}</Badge></td>
+                <td className="font-medium">{c.orcamento_diario ? `R$ ${c.orcamento_diario}` : '—'}</td>
+                <td className="font-medium">{c.meta_cpl ? `R$ ${c.meta_cpl}` : '—'}</td>
+                <td>{dateBR(c.created_at)}</td>
+                <td className="relative px-3 py-3">
+                  <button onClick={() => setOpenMenu(openMenu === c.id ? null : c.id)} className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white text-slate-600 shadow-sm hover:bg-slate-50" aria-label="Ações"><MoreVertical size={18} /></button>
+                  {openMenu === c.id && (
+                    <div className="absolute right-3 z-20 mt-1 w-44 overflow-hidden rounded-2xl border border-border bg-white shadow-[0_20px_40px_rgba(15,23,42,0.18)]">
+                      <button onClick={() => { setOpenMenu(null); edit(c); }} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm hover:bg-slate-50"><Pencil size={14} /> Editar</button>
+                      <Link to={`/gestor/clientes/${c.id}`} onClick={() => setOpenMenu(null)} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm hover:bg-slate-50"><Eye size={14} /> Abrir painel</Link>
+                      <button onClick={() => { setOpenMenu(null); toggleStatus(c); }} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm hover:bg-slate-50"><Ban size={14} /> {c.status === 'desativado' ? 'Ativar' : 'Desativar'}</button>
+                      <button onClick={() => { setOpenMenu(null); remove(c); }} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50"><Trash2 size={14} /> Remover</button>
+                    </div>
+                  )}
+                </td>
+              </tr>
+            ))}</tbody></table></div>
         </Card>
       )}
 
@@ -72,7 +102,7 @@ export default function Clientes() {
             <Input label="Telefone" value={form.telefone} onChange={(e: any) => setForm({ ...form, telefone: e.target.value })} />
             <Input label="E-mail *" value={form.email} onChange={(e: any) => setForm({ ...form, email: e.target.value })} />
             <Input label="Nicho" value={form.nicho} onChange={(e: any) => setForm({ ...form, nicho: e.target.value })} />
-            <label className="block"><span className="mb-1 block text-xs text-muted">Status</span><select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as any })} className="w-full rounded-lg border border-border bg-zinc-900 px-3 py-2"><option>ativo</option><option>pausado</option><option>desativado</option><option>pendente</option></select></label>
+            <label className="block"><span className="mb-1.5 block text-xs font-semibold text-slate-600">Status</span><select value={form.status} onChange={e => setForm({ ...form, status: e.target.value as any })} className="w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm text-slate-900 shadow-sm outline-none focus:border-blue-500 [color-scheme:light]"><option>ativo</option><option>pausado</option><option>desativado</option><option>pendente</option></select></label>
             <Input label="Orçamento diário (R$)" type="number" step="0.01" value={form.orcamento_diario} onChange={(e: any) => setForm({ ...form, orcamento_diario: e.target.value })} />
             <Input label="Meta de CPL (R$)" type="number" step="0.01" value={form.meta_cpl} onChange={(e: any) => setForm({ ...form, meta_cpl: e.target.value })} />
             <Input label="ID da conta de anúncios" value={form.ad_account_id} onChange={(e: any) => setForm({ ...form, ad_account_id: e.target.value })} />

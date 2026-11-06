@@ -46,8 +46,8 @@ export default function Acessos() {
         <div className="grid gap-3 md:grid-cols-4">
           <Input label="E-mail do cliente" value={email} onChange={(e: any) => setEmail(e.target.value)} placeholder="cliente@email.com" />
           <Input label="Senha inicial" type="password" value={password} onChange={(e: any) => setPassword(e.target.value)} />
-          <label className="block"><span className="mb-1 block text-xs text-muted">Cliente</span><select value={clientId} onChange={e => setClientId(e.target.value)} className="w-full rounded-lg border border-border bg-zinc-900 px-3 py-2 text-sm"><option value="">Selecione...</option>{clients.map(c => <option key={c.id} value={c.id}>{c.nome_negocio}</option>)}</select></label>
-          <label className="block"><span className="mb-1 block text-xs text-muted">Tipo</span><select value={role} onChange={e => setRole(e.target.value)} className="w-full rounded-lg border border-border bg-zinc-900 px-3 py-2 text-sm"><option value="cliente">Cliente</option><option value="gestor">Gestor</option></select></label>
+          <label className="block"><span className="mb-1 block text-xs text-muted">Cliente</span><select value={clientId} onChange={e => setClientId(e.target.value)} className="w-full rounded-lg border border-border bg-white text-slate-900 [color-scheme:light] px-3 py-2 text-sm"><option value="">Selecione...</option>{clients.map(c => <option key={c.id} value={c.id}>{c.nome_negocio}</option>)}</select></label>
+          <label className="block"><span className="mb-1 block text-xs text-muted">Tipo</span><select value={role} onChange={e => setRole(e.target.value)} className="w-full rounded-lg border border-border bg-white text-slate-900 [color-scheme:light] px-3 py-2 text-sm"><option value="cliente">Cliente</option><option value="gestor">Gestor</option></select></label>
         </div>
         <Primary className="mt-3" onClick={create}>Criar usuário</Primary>
         <p className="mt-2 text-xs text-muted">O cliente deve confirmar o e-mail e usar a tela de login.</p>
