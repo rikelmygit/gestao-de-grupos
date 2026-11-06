@@ -26,7 +26,7 @@ function HomeRedirect() {
   if (!user) return <Navigate to="/login" replace />;
   if (role === 'gestor') return <Navigate to="/gestor" replace />;
   if (role === 'cliente' && clientIds.length) return <Navigate to={`/painel/${clientIds[0]}`} replace />;
-  return <div className="p-6"><Empty title="Sem acesso configurado" desc="Peça ao gestor para vincular seu usuário a um cliente." /></div>;
+  return <Navigate to="/gestor" replace />;
 }
 
 export default function App() {

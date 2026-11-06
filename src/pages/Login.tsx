@@ -11,8 +11,7 @@ export default function Login() {
     if (loading || !user) return;
     if (role === 'gestor') window.location.href = '/gestor';
     else if (role === 'cliente' && clientIds.length) window.location.href = `/painel/${clientIds[0]}`;
-    else if (role === 'cliente') window.location.href = '/painel/sem-acesso';
-    else window.location.href = '/sem-permissao';
+    else window.location.href = '/gestor';
   }, [user, role, clientIds, loading]);
 
   async function submit(e: React.FormEvent) {
