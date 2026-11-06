@@ -14,7 +14,7 @@ export default function Clientes() {
   const [show, setShow] = useState(false); const [form, setForm] = useState(emptyForm); const [editing, setEditing] = useState<string | null>(null); const [saving, setSaving] = useState(false);
   const [openMenu, setOpenMenu] = useState<string | null>(null);
 
-  async function load() { setLoading(true); const { data, error } = await supabase.from('clients').select('*').order('nome_negocio'); if (error) setErr(error.message); else { setList(data ?? []); setErr(null); } setLoading(false); }
+  async function load() { setLoading(true); const { data, error } = await supabase.from('clients').select('*').order('nome_negocio'); if (error) setErr(error.message); else { setList((data ?? []) as Client[]); setErr(null); } setLoading(false); }
   useEffect(() => { load(); }, []);
 
   const filtered = list.filter(c => (status === 'all' || c.status === status) && c.nome_negocio.toLowerCase().includes(q.toLowerCase()));
