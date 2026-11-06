@@ -16,7 +16,7 @@ export default function MetaIntegracao() {
     if (!client.ad_account_id) { setMsg('Informe o ID da conta de anúncios no cadastro do cliente.'); return; }
     setMsg(`Conectando conta ${client.ad_account_id}...`);
     try {
-      const res = await fetch(getEdgeUrl('meta-ads'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string, Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` }, body: JSON.stringify({ action: 'connect', client_id: client.id, ad_account_id: client.ad_account_id }) });
+      const res = await fetch(getEdgeUrl('meta-ads'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string, Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` }, body: JSON.stringify({ action: 'connect', client_id: client.id, ad_account_id: client.ad_account_id }) });
       const j = await res.json();
       if (!res.ok) setMsg(j.error ?? 'Falha na integração. Verifique token e permissões.');
       else setMsg('Conta conectada com sucesso.');
@@ -26,7 +26,7 @@ export default function MetaIntegracao() {
   async function listAccounts() {
     setMsg('Buscando contas disponíveis...');
     try {
-      const res = await fetch(getEdgeUrl('meta-ads'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_ANON_KEY as string, Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` }, body: JSON.stringify({ action: 'list_accounts' }) });
+      const res = await fetch(getEdgeUrl('meta-ads'), { method: 'POST', headers: { 'Content-Type': 'application/json', apikey: import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string, Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}` }, body: JSON.stringify({ action: 'list_accounts' }) });
       const j = await res.json();
       if (!res.ok) setMsg(j.error ?? 'Não foi possível listar. Verifique as credenciais da Meta no backend.');
       else { setAccounts(j.accounts ?? []); setMsg(`${(j.accounts ?? []).length} contas encontradas.`); }

@@ -9,6 +9,7 @@ import Acessos from '@/pages/Acessos';
 import MetaIntegracao from '@/pages/MetaIntegracao';
 import PainelCliente from '@/pages/PainelCliente';
 import Relatorios from '@/pages/Relatorios';
+import Biblioteca from '@/pages/Biblioteca';
 import { Card, Empty, Loading } from '@/components/UI';
 
 function Gate({ children, roles }: { children: JSX.Element; roles: string[] }) {
@@ -42,6 +43,8 @@ export default function App() {
             <Route path="/gestor/acessos" element={<Gate roles={['gestor']}><Acessos /></Gate>} />
             <Route path="/gestor/integracao" element={<Gate roles={['gestor']}><MetaIntegracao /></Gate>} />
             <Route path="/gestor/relatorios" element={<Gate roles={['gestor']}><Relatorios /></Gate>} />
+            <Route path="/gestor/biblioteca" element={<Gate roles={['gestor']}><Biblioteca /></Gate>} />
+            <Route path="/painel/biblioteca" element={<Gate roles={['cliente']}><Biblioteca /></Gate>} />
             <Route path="/painel/:id" element={<Gate roles={['cliente']}><PainelCliente /></Gate>} />
             <Route path="/painel/sem-acesso" element={<Empty title="Sem cliente vinculado" desc="Fale com o gestor." />} />
           </Route>
